@@ -10,7 +10,7 @@
         <div class="carousel-inner">
          <form action="content.php" method="get">
             <a href="index.php?id=3" class="carousel-item active">
-               <img src="img/nezuko cut.jpg" class="d-block w-100" alt="" style="height:300px;">
+               <img src="./img/nezuko cut.jpg" class="d-block w-100" alt="" style="height:300px;">
              </a>
          </form>
           <!-- <a href="" class="carousel-item active">

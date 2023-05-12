@@ -41,7 +41,7 @@
                   ';
                   echo '<button class="btn btn-outline-success btnInNav">Cart</button>';
                 }else{
-                  echo '<form action="login_sigin/log_sig.php">';
+                  echo '<form action="login_sigin/customer_login.php">';
                   echo '<button class="btn btn-outline-success btnInNav">Sign in</button>';
                   echo '</form>';
                   echo '<!-- <button class="btn btn-outline-success btnInNav">Sign in</button> -->';
