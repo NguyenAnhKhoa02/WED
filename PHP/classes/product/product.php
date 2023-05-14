@@ -13,10 +13,10 @@
         public $color;
         public $size;
         public $quantity;
-        public $url_image;
+        public $image;
         public $quantity_purchased;
 
-        function __construct($id,$name,$price,$description,$material,$gender,$made_by,$status,$category,$type_product,$color,$size,$quantity,$url_image,$quantity_purchased){
+        function __construct($id,$name,$price,$description,$material,$gender,$made_by,$status,$category,$type_product,$color,$size,$quantity,$image,$quantity_purchased){
             $this->id = $id;
             $this->price = $price;
             $this->name = $name;
@@ -30,7 +30,7 @@
             $this->color = $color;
             $this->size = $size;
             $this->quantity = $quantity;
-            $this->url_image = $url_image;
+            $this->image = $image;
             $this->quantity_purchased = $quantity_purchased;
         }
     }
