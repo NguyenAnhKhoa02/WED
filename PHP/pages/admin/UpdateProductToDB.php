@@ -26,13 +26,9 @@
     $quantity = $_POST["quantities"];
     $description = $_POST["description"];
     $quantity_purchased = $_POST["quantity_purchased"];
-    $listColorOriginal = $_POST["listColorOriginal"];
-    $images = $_POST["images"];
 
     $category = $listCategory->getIdFromName($category);
     $type = $listType->getIdFromName($type);
-
-    echo $images;
 
     if($name == ""){
         die("Name is null");
@@ -46,16 +42,23 @@
         die("Quantity is null");
     }
 
-    if(isset($_FILES['image'])){
-        $image = $_FILES['image']['name'];
-        $file_image = $_FILES['image']['tmp_name'];
-        $dir_saved = $_SERVER["DOCUMENT_ROOT"]."/PHP/img/".$_FILES['image']['name'];
-        move_uploaded_file($_FILES['image']['tmp_name'],$dir_saved);
+    $images = array();
+    for ($i=0; $i < sizeof(explode(",",$color)); $i++) { 
+        if(isset($_FILES["image$i"])){
+            $image = $_FILES["image$i"]['name'];
+            $file_image = $_FILES["image$i"]['tmp_name'];
+            $dir_saved = $_SERVER["DOCUMENT_ROOT"]."/PHP/img/".$_FILES["image$i"]['name'];
+            move_uploaded_file($_FILES["image$i"]['tmp_name'],$dir_saved);
 
-        // $list->UpdateProduct($id,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$image,$quantity_purchased);
-    } else{
-        // $list->UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,"",$quantity_purchased,$listColorOriginal);   
+            $images[] = $image;
+        } else{
+            $images[] = "NULL";
+        }
     }
+
+
+
+    $list->UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$images,$quantity_purchased);
 
     echo 'Update success';
 ?>

@@ -24,35 +24,37 @@
     $type = $_POST["type"];
     $quantities = $_POST["quantities"];
     $description = $_POST["description"];
-    $images = $_POST["images"];
 
     $category = $listCategory->getIdFromName($category);
     $type = $listType->getIdFromName($type);
 
-    echo $images;
+    $images = array();
+    for ($i=0; $i < sizeof(explode(",",$colors)); $i++) { 
+        if(isset($_FILES["image$i"])){
+            $image = $_FILES["image$i"]['name'];
+            $file_image = $_FILES["image$i"]['tmp_name'];
+            $dir_saved = $_SERVER["DOCUMENT_ROOT"]."/PHP/img/".$_FILES["image$i"]['name'];
+            move_uploaded_file($_FILES["image$i"]['tmp_name'],$dir_saved);
 
-    // if($nameProd == ""){
-    //     die("Name is null");
-    // } else if($price == ""){
-    //     die("Price is null");
-    // } elseif ($made_by == "") {
-    //     die("Made_by is null");
-    // } elseif ($colors == "") {
-    //     die("Color is null");
-    // } elseif ($quantities == "") {
-    //     die("Quantities is null");
-    // }
+            $images[] = $image;
+        }else{
+            $images = "NULL";
+        }
+    }
 
-    // if(isset($_FILES['image'])){
-    //     $image = $_FILES['image']['name'];
-    //     $file_image = $_FILES['image']['tmp_name'];
-    //     $dir_saved = $_SERVER["DOCUMENT_ROOT"]."/PHP/img/".$_FILES['image']['name'];
-    //     move_uploaded_file($_FILES['image']['tmp_name'],$dir_saved);
+    if($nameProd == ""){
+        die("Name is null");
+    } else if($price == ""){
+        die("Price is null");
+    } elseif ($made_by == "") {
+        die("Made_by is null");
+    } elseif ($colors == "") {
+        die("Color is null");
+    } elseif ($quantities == "") {
+        die("Quantities is null");
+    }
 
-    //     $list->addNewProduct($nameProd,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$image);
-    // } else{
-    //     $list->addNewProduct($nameProd,$price,$material,$gender,$made_by,$status,$colors,$sizes,$category,$type,$quantities,$description,"");   
-    // }
+    $list->addNewProduct($nameProd,$price,$material,$gender,$made_by,$status,$colors,$sizes,$category,$type,$quantities,$description,$images);
 
     echo 'Add Success';
 ?>

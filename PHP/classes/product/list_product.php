@@ -38,7 +38,40 @@
             $this->CloseCon();
         }
 
-        function addNewProduct($name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$image){
+        function getAllFromProductTable(){
+
+            $this->OpenCon();
+            $string_query = "SELECT product.id_product, product.nameProd, product.price,product.material,product.gender,product.gender,product.made_by,product.status,category.nameCate,type_product.nameType
+                             FROM product
+                             INNER JOIN category on category.id_category = product.id_category
+                             INNER JOIN type_product on type_product.id_type_product = product.id_type_product";
+
+            $this->ExcQuery($string_query);
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                    $this->listProduct[] = new Product($row["id_product"],
+                                                 $row["nameProd"],
+                                                 $row["price"],
+                                                 "",
+                                                 $row["material"],
+                                                 $row["gender"],
+                                                 $row["made_by"],
+                                                 $row["status"],
+                                                 $row["nameCate"],
+                                                 $row["nameType"],
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "");
+                }
+            }
+
+            $this->CloseCon();
+
+        }
+
+        function addNewProduct($name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$images){
             $id_product = uniqid("prod",false);
             
             $this->OpenCon();
@@ -53,7 +86,8 @@
                 $color_ = $arrColors[$i];
                 $size_ = $arrSizes[$i];
                 $quantity_ = $arrQuantity[$i];
-                $string_query = "INSERT INTO `product_detail`(`id_product`, `color`, `size`, `quantity`, `image`, `quantity_purchased`) VALUES ('$id_product','$color_','$size_','$quantity_','$image','0')";
+                $image_ = $images[$i];
+                $string_query = "INSERT INTO `product_detail`(`id_product`, `color`, `size`, `quantity`, `image`, `quantity_purchased`) VALUES ('$id_product','$color_','$size_','$quantity_','$image_','0')";
                 $this->ExcQueryInsert($string_query);
             }
 
@@ -99,7 +133,7 @@
             return $this->listProduct;
         }
 
-        function UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$image,$quantity_purchased,$listColorOriginal){
+        function UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,array $images,$quantity_purchased){
             $this->OpenCon();
 
             $string_query = 'UPDATE product SET 
@@ -119,48 +153,19 @@
             $arrColors = explode(",",$color);
             $arrQuantity = explode(",",$quantity);
             $arrSizes = explode(",",$size);
-            $arrColorsOrginial = explode(",",$listColorOriginal);
             $i = 0;
-            while($i < sizeof($arrColorsOrginial)) { 
+
+            $string_query = "DELETE FROM `product_detail` WHERE product_detail.id_product='$id'";
+            $this->ExcQueryInsert($string_query);
+
+            for ($i=0; $i < sizeof($arrColors); $i++) { 
                 $color_ = $arrColors[$i];
                 $size_ = $arrSizes[$i];
                 $quantity_ = $arrQuantity[$i];
-                $colorOrginial = $arrColorsOrginial[$i];
-
-                $string_query = "UPDATE `product_detail` SET 
-                                `color`='$color_',
-                                `size`='$size_',
-                                `quantity`='$quantity_',
-                                `image`='$image',
-                                `quantity_purchased`=$quantity_purchased
-                                WHERE id_product='$id' and color='$colorOrginial'";
-
+                $image_ = $images[$i];
+                $string_query = "INSERT INTO `product_detail`(`id_product`, `color`, `size`, `quantity`, `image`, `quantity_purchased`) VALUES ('$id','$color_','$size_','$quantity_','$image_','0')";
                 $this->ExcQueryInsert($string_query);
-
-                $i = $i +1;
             }
-
-            echo $i;
-
-            while ($i < sizeof($arrColors)) {
-                $color_ = $arrColors[$i];
-                $size_ = $arrSizes[$i];
-                $quantity_ = $arrQuantity[$i];
-                $string_query = "INSERT INTO `product_detail`(`id_product`, `color`, `size`, `quantity`, `image`, `quantity_purchased`) VALUES ('$id','$color_','$size_','$quantity_','$image','0')";
-                $this->ExcQueryInsert($string_query);
-
-                $i++;
-            }
-
-            // $string_query = 'UPDATE `product_detail` SET 
-            //                 `color`=\''.$color.'\',
-            //                 `size`=\''.$size.'\',
-            //                 `quantity`='.$quantity.',
-            //                 `url_image`=\''.$image.'\',
-            //                 `quantity_purchased`='.$quantity_purchased.'
-            //                 WHERE id_product = \''.$id.'\'';
-
-            // $this->ExcQueryInsert($string_query);
 
             $this->CloseCon();
         }
@@ -168,10 +173,10 @@
         function RemoveProduct($id){
             $this->OpenCon();
 
-            $string_query = 'DELETE FROM `product_detail` WHERE id_product = '.$id.'';
+            $string_query = 'DELETE FROM `product_detail` WHERE id_product = \''.$id.'\'';
             $this->ExcQueryInsert($string_query);
 
-            $string_query = 'DELETE FROM `product` WHERE id_product = '.$id.'';
+            $string_query = 'DELETE FROM `product` WHERE id_product = \''.$id.'\'';
             $this->ExcQueryInsert($string_query);
 
             $this->CloseCon();

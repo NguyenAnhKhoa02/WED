@@ -12,10 +12,13 @@
 <script>
     listProductDetail = [];
     listColorOriginal = [];
+    listSizeOriginal = [];
 
-    function initialListProductDetail(color,size,quantity){
+    function initialListProductDetail(id,color,size,quantity,image){
+        idProd = id;
         listColorOriginal.push(color);
-        listProductDetail.push(new productDetail(color,size,quantity));
+        listSizeOriginal.push(size);
+        listProductDetail.push(new productDetail(color,size,quantity,image));
     }
 
     function updateData(){
@@ -24,7 +27,9 @@
             color = document.getElementById("color"+index).value;
             size = document.getElementById("size"+index).value;
             quantity = document.getElementById("quantity"+index).value;
-            image = document.getElementById("image"+index).value;
+            image = document.getElementById("image"+index).files[0];
+
+            // console.log(image);
 
             listProductDetail.push(new productDetail(color,size,quantity,image));
         }
@@ -93,7 +98,7 @@
                     html += "<td>"+listProductDetail[index].image+"</td>";
             else
                 html += "<td>NULL</td>";
-            html += "<td><input type=\"file\" class=\"form-control\" id=\"image"+index+"\" value=\"D:\\Img\\360skin1.png\" style=\"\"></input></td>";
+            html += "<td><input type=\"file\" class=\"form-control\" id=\"image"+index+"\"></input></td>";
 
             if(index == length)
                 html += "<td> <button class=\"btn btn-outline-success\" onclick=\"addItem();\">Add</button> </td>";
@@ -110,31 +115,14 @@
     }
 
     function deleteItem(id){
-        for (let index = 0; index < arrHtml.length; index++) {
-            arrHtml[index] = arrHtml[index].replace("<td class=\"color\"><input id=\"color"+index+"\" type=\"text\"></td>","temptColor");
-            arrHtml[index] = arrHtml[index].replace("<select id=\"size"+index+"\">","temptSelect");
-            arrHtml[index] = arrHtml[index].replace("<td><input id=\"quantity"+index+"\" type=\"number\"></td>","tempQuantity");
-            arrHtml[index] = arrHtml[index].replace("<td> <button  class=\"btn btn-outline-danger\" onclick=\"deleteItem("+index+");\">Delete</button> </td>","temptButton");
-            arrHtml[index] = arrHtml[index].replace("<td><input type=\"file\" class=\"form-control\" id=\"image"+index+"\" value=\"D:\\Img\\360skin1.png\" style=\"\"></input></td>","temptImage");
+        for (let index = 0; index < listProductDetail.length; index++) {
+            if(index == id){
+                listProductDetail.splice(id,1);
+                console.log(listProductDetail);
+                arrHtml = [];
+                addItem();
+            }
         }
-
-        arrHtml.splice(id,1);
-
-        for (let index = 0; index < arrHtml.length; index++) {
-            arrHtml[index] = arrHtml[index].replace("temptColor","<td class=\"color\"><input id=\"color"+index+"\" type=\"text\"></td>");
-            arrHtml[index] = arrHtml[index].replace("temptSelect","<select id=\"size"+index+"\">");
-            arrHtml[index] = arrHtml[index].replace("tempQuantity","<td><input id=\"quantity"+index+"\" type=\"number\"></td>");
-            arrHtml[index] = arrHtml[index].replace("temptButton","<td> <button  class=\"btn btn-outline-danger\" onclick=\"deleteItem("+index+");\">Delete</button> </td>");
-            arrHtml[index] = arrHtml[index].replace("temptImage","<td><input type=\"file\" class=\"form-control\" id=\"image"+index+"\" value=\"D:\\Img\\360skin1.png\" style=\"\"></input></td>","temptImage");
-        }
-
-        document.getElementById("productDetailTable").innerHTML="";
-
-        arrHtml.forEach(element => {
-        document.getElementById("productDetailTable").insertRow().innerHTML = element; 
-        });
-
-        // console.log(arrHtml);
     }
 </script>
 
@@ -176,7 +164,7 @@
                                $listProd[0]->color,
                                $listProd[0]->size,
                                $listProd[0]->quantity,
-                               $listProd[0]->url_image,
+                               $listProd[0]->image,
                                $listProd[0]->quantity_purchased);
     } else{
         $product = new Product("","","","","","","","","","","","","","","");
@@ -293,7 +281,7 @@
 
     if($product->id != ""){
         foreach ($listProd as $value) {
-            echo '<script>initialListProductDetail(\''.$value->color.'\',\''.$value->size.'\',\''.$value->quantity.'\');</script>';   
+            echo '<script>initialListProductDetail(\''.$value->id.'\',\''.$value->color.'\',\''.$value->size.'\',\''.$value->quantity.'\',\''.$value->image.'\');</script>';   
         }
 
         echo '<script>addItem();</script>';   
@@ -351,7 +339,6 @@
 
             var category = $('#category').val();
             var type = $('#type').val();
-            // var image = $('#image')[0].files[0];
             var description = $('#description').val();
 
             if(name == ""){
@@ -376,7 +363,16 @@
             formData.append('category',category);
             formData.append('type',type);
             formData.append('quantities',quantities);
-            formData.append('images',images);
+
+            $i = 0;
+            images.forEach(element => {
+                formData.append('image'+$i++,element); 
+            });
+ 
+            if(images.length == 0){
+                images.push("");
+            }
+
             formData.append('description',description);
 
             $.ajax({
@@ -386,7 +382,8 @@
                 contentType:false,
                 processData:false,
                 success: function(dataResult){
-                    console.log(dataResult);
+                    alert(dataResult);
+                    $("#content").load("ManageProduction.php");
                 }
             })
         })
@@ -405,7 +402,6 @@
             var category = $('#category').val();
             var type = $('#type').val();
             var quantity_purchased = $('#quantity_purchased').val();
-            var image = $('#image')[0].files[0];
             var description = $('#description').val();
 
             colors=[];
@@ -435,9 +431,15 @@
             formData.append('type',type);
             formData.append('quantities',quantities);
             formData.append('quantity_purchased',quantity_purchased);
-            formData.append('images',images);
-            formData.append('description',description);
-            formData.append('listColorOriginal',listColorOriginal);
+
+            
+            $i = 0;
+            images.forEach(element => {
+                formData.append('image'+$i++,element); 
+            });
+
+
+            formData.append('description',description);;
 
             $.ajax({
                 url: "UpdateProductToDB.php",
@@ -446,7 +448,14 @@
                 contentType:false,
                 processData:false,
                 success: function(dataResult){
-                    console.log(dataResult);
+                    $.ajax({
+                        url:"Product.php",
+                        data:{id:idProd},
+                        type:'post',
+                        success: function(result){
+                            $("#content").html(result);
+                        }
+                    })
                 }
             })
         })
