@@ -301,37 +301,34 @@ $("#pass").keyup(function(){
 check_pass();
 
 });
-$("#email").keyup(function(){
-  check_email()
-})
 $("#phone").keyup(function(){
   check_phone()
-})
+});
 $("#birthday").keyup(function(){
   check_birthday()
 })
 });
 //check mail 
-function check_email(){
-  var val=document.getElementById("email").value
-  var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
+// function check_email(){
+//   var val=document.getElementById("email").value
+//   var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
 
-      $('.email').focusout(function(){
-        if (filter.test(val)){
-          $('.tick3').show()
-          $('.cross3').hide()
-        } else{
-          $('.tick3').hide()
-          $('.cross3').show()
-        }
+//       $('.email').focusout(function(){
+//         if (filter.test(val)){
+//           $('.tick3').show()
+//           $('.cross3').hide()
+//         } else{
+//           $('.tick3').hide()
+//           $('.cross3').show()
+//         }
     
-  })
+//   })
   
-}
+// }
 
 function check_phone(){
   var val = document.getElementById("phone").value
-  var filter = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
+  var filter =/((09|03|07|08|05)+([0-9]{8})\b)/g
 
     $('.phone').focusout(function(){
         if(filter.test(val)){
