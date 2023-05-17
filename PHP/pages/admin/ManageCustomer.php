@@ -2,11 +2,10 @@
     <h5>Manage Customer</h5>
 </div>
 
-<table class="table table-hover">
+<table class="table table-hover" id="displayTable">
     <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">ID_Account</th>
+          <th scope="col">ID_Customer</th>
           <th scope="col">username</th>
           <th scope="col">password</th>
           <th scope="col">Name</th>
@@ -14,53 +13,43 @@
           <th scope="col">Birthday</th>
           <th scope="col">Phone</th>
           <th scope="col">Address</th>
+          <th scope="col">NameRole</th>
         </tr>
       </thead>
       <tbody>
-        <?php
-        //   require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
-        //   $connectDB = new connectDatabase();
-        //   $connectDB->OpenCon();
+          <?php
+              require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
+              require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/customer/customer.php');
+              require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/customer/list_customer.php');
+              $listCustomer = new ListCustomer();
 
-        //   $string_query = "select *
-        //                    from product
-        //                    inner join product_detail on product.id_product = product_detail.id_product
-        //                    inner join category on product.id_category = category.id_category
-        //                    inner join type_product on product.id_type_product = type_product.id_type_product";
-
-        //   $connectDB->ExcQuery($string_query);
-        
-        //   while ($row = $connectDB->result->fetch_assoc()) {
-        //     echo '<tr>
-        //           <th scope="row">'.$row["id_product"].'
-        //           <td>'.$row["price"].'</td>
-        //           <td>'.$row["description"].'</td>
-        //           <td>'.$row["metarial"].'</td>
-        //           <td>'.$row["gender"].'</td>
-        //           <td>'.$row["made_by"].'</td>
-        //           <td>'.$row["status"].'</td>
-        //           <td>'.$row["nameCate"].'</td>
-        //           <td>'.$row["nameType"].'</td>
-        //           <td>'.$row["color"].'</td>
-        //           <td>'.$row["size"].'</td>
-        //           <td>'.$row["quantity"].'</td>
-        //           <td>'.$row["status"].'</td>
-        //           <td>'.$row["url_image"].'</td>
-        //           <td>'.$row["quantity_purchased"].'</td>
-        //           </tr>';
-        //   }
-        ?>
+              $listCustomer->getAll("cust");
+              foreach ($listCustomer->listCustomer as $value) {
+                echo "<tr>
+                      <td>".$value->id_customer."</td>
+                      <td>".$value->username."</td>
+                      <td>".$value->password."</td>
+                      <td>".$value->name."</td>
+                      <td>".$value->gender."</td>
+                      <td>".$value->birthday."</td>
+                      <td>".$value->phone."</td>
+                      <td>".$value->address."</td>
+                      <td>".$value->nameRole."</td>
+                      <td><button class=\"btn btn-danger buttonDelete\">Delete</button></td>
+                      </tr>";
+              }
+          ?>
       </tbody>
 </table>
 
-<div class="container" style="text-align:center;">
+<!-- <div class="container" style="text-align:center;">
   <button id="Add" class="btn btn-outline-primary" value="AddProduct" name="function">Add</button> 
-</div>
+</div> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
 </script>
 
-<script>
+<!-- <script>
   $(document).ready(function(){
     $("#Add").click(function(){
       $.ajax({
@@ -70,5 +59,21 @@
         }
       })
     })
+
+    $("#displayTable").on('click',".buttonDelete",function(){
+      var currentRow = $(this).closest("tr");
+      var id=currentRow.find("td:eq(0)").text(); 
+
+      if(confirm("Do you want to delete?")){
+        $.ajax({
+          url:'Delete.php',
+          type:'post',
+          data: {id:id,mode:"Customer"},
+          success:function(result){
+              $("#content").load("ManageProduction.php");
+          }
+        }) 
+      }
+    })
   })
-</script>
+</script> -->

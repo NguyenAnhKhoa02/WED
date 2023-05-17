@@ -15,26 +15,32 @@
 
 <body>
   <?php
-    require 'classes/check_key.php';
-    $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-    $check_key = new checkKey($actual_link);
+    session_start();
+    // $actual_link = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
     require 'classes/connect_database.php';
   ?>
 
   <?php
-      if($check_key->check_key("id")){
-        include "header/header_non_vid.php";
-      }else{
-        include "header/header.php";
-      };
+      include "header/header.php";
+      // $var = explode("?",$actual_link);
+      // foreach ($var as $key => $value) {
+      //   $check = $check_key->check_key($value);
+
+      //   if($check == "cust") include "header/header.php";
+      // }
+      // if($check_key->check_key("id")){
+      //   include "header/header_non_vid.php";
+      // }else{
+      //   include "header/header.php";
+      // };
   ?>
 
   <?php
-    if($check_key->check_key("id")){
-      include "pages/products.php";
-    }else{
       include "content.php";
-    }
+    // if($check_key->check_key("id")){
+    //   include "pages/products.php";
+    // }else{
+    // }
   ?>
 
 

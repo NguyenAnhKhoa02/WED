@@ -1,3 +1,14 @@
+<?php
+    session_start();
+
+    require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/group_role/group_role.php');
+    require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/group_role/list_groupRole.php');
+    $listGroupRole = new ListGroupRole();
+
+    $listGroupRole->GetGroupRoleByID($_SESSION["idGroupRole"]);
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -15,7 +26,7 @@
 
 <body>
     <form action="http://localhost/PHP/index.php" method="get">
-        <input class="btn btn-outline-primary" type="submit" name="user" value="admin">
+        <input class="btn btn-outline-primary" type="submit" value="Admin">
     </form>
 
     <div class="container" style="text-align:center;">
@@ -25,15 +36,46 @@
     <div class="container" style="padding:0px; margin:0px 0px 0px 40px;">
         <div class="row">
             <div class="col-2 list-group">
-              <button class="list-group-item list-group-item-action" id="ManageProduction">ManageProduction</button>
-              <button class="list-group-item list-group-item-action" id="ManageCategory">ManageCategory</button>
+              <?php
+                foreach ($listGroupRole->listNameRole as $key => $value) {
+                  if($value == "ManageProduction"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageProduction\">ManageProduction</button>";
+                  }
+                  if($value == "ManageCategory"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageCategory\">ManageCategory</button>";
+                  }
+                  if($value == "ManageType"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageType\">ManageType</button>";
+                  }
+                  if($value == "ManageInvoice"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageInvoice\">ManageInvoice</button>";
+                  }
+                  if($value == "ManageCustomer"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageCustomer\">ManageCustomer</button>";
+                  }
+                  if($value == "ManageEmployee"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageEmployee\">ManageEmployee</button>";
+                  }
+                  if($value == "ManageAccount"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageAccount\">ManageAccount</button>";
+                  }
+                  if($value == "ManageGroupRole"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageGroupRole\">ManageGroupRole</button>";
+                  }
+                  if($value == "ManageOrder"){
+                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageOrder\">ManageOrder</button>";
+                  }
+                }
+              ?>
+              <!-- <button class="list-group-item list-group-item-action" id="ManageProduction">ManageProduction</button> -->
+              <!-- <button class="list-group-item list-group-item-action" id="ManageCategory">ManageCategory</button>
               <button class="list-group-item list-group-item-action" id="ManageType">ManageType</button>
               <button class="list-group-item list-group-item-action" id="ManageInvoice">ManageInvoice</button>
               <button class="list-group-item list-group-item-action" id="ManageCustomer">ManageCustomer</button>
+              <button class="list-group-item list-group-item-action" id="ManageEmployee">ManageEmployee</button>
               <button class="list-group-item list-group-item-action" id="ManageAccount">ManageAccount</button>
               <button class="list-group-item list-group-item-action" id="ManageGroupRole">ManageGroupRole</button>
-              <button class="list-group-item list-group-item-action" id="ManageRole">ManageRole</button>
-              <button class="list-group-item list-group-item-action" id="ManageOrder">ManageOrder</button>
+              <button class="list-group-item list-group-item-action" id="ManageOrder">ManageOrder</button> -->
            </div>
 
             <div class="col-10" id="content">
@@ -104,6 +146,15 @@
         })
       })
 
+      $("#ManageEmployee").click(function(){
+        $.ajax({
+          url:"ManageEmployee.php",
+          success: function(result){
+            $("#content").html(result);
+          }
+        })
+      })
+
       $("#ManageAccount").click(function(){
         $.ajax({
           url:"ManageAccount.php",
@@ -116,15 +167,6 @@
       $("#ManageGroupRole").click(function(){
         $.ajax({
           url:"ManageGroupRole.php",
-          success: function(result){
-            $("#content").html(result);
-          }
-        })
-      })
-
-      $("#ManageRole").click(function(){
-        $.ajax({
-          url:"ManageRole.php",
           success: function(result){
             $("#content").html(result);
           }

@@ -2,46 +2,30 @@
     <h5>Manage Group Role</h5>
 </div>
 
-<table class="table table-hover">
+<table class="table table-hover" id="displayTable">
     <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">ID</th>
           <th scope="col">Name</th>
         </tr>
       </thead>
       <tbody>
         <?php
-        //   require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
-        //   $connectDB = new connectDatabase();
-        //   $connectDB->OpenCon();
+          require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
+          require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/group_role/group_role.php');
+          require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/group_role/list_groupRole.php');
 
-        //   $string_query = "select *
-        //                    from product
-        //                    inner join product_detail on product.id_product = product_detail.id_product
-        //                    inner join category on product.id_category = category.id_category
-        //                    inner join type_product on product.id_type_product = type_product.id_type_product";
-
-        //   $connectDB->ExcQuery($string_query);
-        
-        //   while ($row = $connectDB->result->fetch_assoc()) {
-        //     echo '<tr>
-        //           <th scope="row">'.$row["id_product"].'
-        //           <td>'.$row["price"].'</td>
-        //           <td>'.$row["description"].'</td>
-        //           <td>'.$row["metarial"].'</td>
-        //           <td>'.$row["gender"].'</td>
-        //           <td>'.$row["made_by"].'</td>
-        //           <td>'.$row["status"].'</td>
-        //           <td>'.$row["nameCate"].'</td>
-        //           <td>'.$row["nameType"].'</td>
-        //           <td>'.$row["color"].'</td>
-        //           <td>'.$row["size"].'</td>
-        //           <td>'.$row["quantity"].'</td>
-        //           <td>'.$row["status"].'</td>
-        //           <td>'.$row["url_image"].'</td>
-        //           <td>'.$row["quantity_purchased"].'</td>
-        //           </tr>';
-        //   }
+          $list = new ListGroupRole();
+          $list->getAllGroupRole();
+          
+          foreach ($list->listGroupRole as $value) {
+            echo '<tr>
+                  <td>'.$value->id.'</td>
+                  <td style="min-width:300px;">'.$value->name.'</td>
+                  <td><button class="btn btn-warning buttonEdit">Edit</button></td>
+                  <td><button class="btn btn-danger buttonDelete" data-target="#modelConfirm" data-toggle="modal">Delete</button></td>
+                  </tr>';
+          }
         ?>
       </tbody>
 </table>
@@ -57,11 +41,44 @@
   $(document).ready(function(){
     $("#Add").click(function(){
       $.ajax({
-        url:"AddProduct.php",
+        url:"GroupRole.php",
+        data: {id:""},
         success: function(result){
           $("#content").html(result);
         }
       })
+    })
+
+    $("#displayTable").on('click',".buttonDelete",function(){
+      var currentRow = $(this).closest("tr");
+      var id=currentRow.find("td:eq(0)").text(); 
+
+      if(confirm("Do you want to delete?")){
+        $.ajax({
+          url:'Delete.php',
+          type:'post',
+          data: {id:id,
+                 mode:"GroupRole"},
+          success:function(result){
+              alert(result);
+              $("#content").load("ManageGroupRole.php");
+          }
+        }) 
+      }
+    })
+
+    $("#displayTable").on('click',".buttonEdit",function(){
+      var currentRow = $(this).closest("tr");
+      var id=currentRow.find("td:eq(0)").text(); 
+
+      $.ajax({ 
+        url:'GroupRole.php',
+        type:'post',
+        data: {id:id},
+        success:function(result){
+          $("#content").html(result);
+        }
+      }) 
     })
   })
 </script>

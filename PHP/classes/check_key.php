@@ -1,20 +1,11 @@
 <?php
-
     class checkKey{
-        private $url;
-
-        function __construct($url){
-            $this->url = $url;
+        function __construct(){
         }
 
+        
         function check_key($key){
-            $val = explode("?",$this->url);
-
-            for ($i=0; $i < count($val); $i++) { 
-                if(explode("=",$val[$i])[0] == $key){
-                    return true;
-                }
-            }
+            return substr($val[1],0,4);
         }
 
         function get_url(){

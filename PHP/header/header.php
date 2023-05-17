@@ -19,32 +19,30 @@
             </form>
 
             <?php
-                if($check_key->check_key("user")){
-                  $val = explode("?",$check_key->get_url());
-                  for ($i=0; $i < count($val); $i++) { 
-                      if(explode("=",$val[$i])[0] == "user"){
-                          $user = explode("=",$val[$i])[1];
-                          break;
-                      }
+                if(isset($_SESSION["idCustomer"])){
+                  if(substr($_SESSION["idCustomer"],0,4) == "cust"){
+                    echo "<form method=\"post\">
+                          <button class=\"btn btn-outline-success btnInNav\" id=\"btnCus\">Me</button>
+                          <button class=\"btn btn-outline-success btnInNav\" id=\"btnCart\">Cart</button>
+                          <button class=\"btn btn-outline-success btnInNav\" id=\"btnSignOut\">Sign out</button>
+                          <form>";
                   }
-
-                  if($user == "admin"){
-                    echo '<a href="pages/admin/admin.php" style="text-decoration:none;">'.$user.'</a>';
-                  }else{
-                    echo '<a href="#" style="text-decoration:none;">'.$user.'</a>';
-                  }
-                  echo '<!-- <button class="btn btn-outline-success btnInNav">Sign in</button> -->';
-                  echo '
-                  <form action="index.php">
-                    <button class="btn btn-outline-success btnInNav">Sign out</button>
-                  </form>
-                  ';
-                  echo '<button class="btn btn-outline-success btnInNav">Cart</button>';
-                }else{
-                  echo '<form action="login_sigin/customer_login.php">';
-                  echo '<button class="btn btn-outline-success btnInNav">Sign in</button>';
-                  echo '</form>';
-                  echo '<!-- <button class="btn btn-outline-success btnInNav">Sign in</button> -->';
+                  else if(substr($_SESSION["idCustomer"],0,4) == "empl"){
+                    echo "<form method=\"post\">
+                          <button class=\"btn btn-outline-success btnInNav\" id=\"btnAdmin\">Admin</button>
+                          <button class=\"btn btn-outline-success btnInNav\" id=\"btnSignOut\">Sign out</button>
+                          <form>";
+                  }     
+                }else if(isset($_SESSION["idAccount"])){
+                  echo "<form method=\"post\">
+                        <button class=\"btn btn-outline-success btnInNav\" id=\"btnAdmin\">Admin</button>
+                        <button class=\"btn btn-outline-success btnInNav\" id=\"btnSignOut\">Sign out</button>
+                        <form>";
+                }
+                else {
+                  echo "<form action=\"login_sigin/customer_login.php\">
+                          <button class=\"btn btn-outline-success btnInNav\">Sign in</button>
+                        </form>";
                 }
             ?>
           </div>
@@ -55,4 +53,55 @@
         <source src="vid\intro.mp4">
       </video>
     </div>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
+    </script>
+
+    <script>
+      $(document).ready(function(){
+        
+        $("#btnSignOut").click(function(e){
+          e.preventDefault();
+          $.ajax({
+            url:"login_sigin/Logout.php",
+            type:"post",
+            success: function(result){
+              window.location.href = "http://localhost/PHP/index.php";
+            }
+          })
+        })
+
+        $("#btnAdmin").click(function(e){
+          e.preventDefault();
+          $.ajax({
+            success: function(result){
+              window.location.href = "http://localhost/PHP/pages/admin/admin.php";
+            }
+          })
+        })
+
+        $("#btnCus").click(function(e){
+          e.preventDefault();
+          $.ajax({
+            success: function(result){
+              window.location.href = "http://localhost/PHP/pages/customer/customer.php";
+            }
+          })
+        })
+
+        $("#btnCart").click(function(e){
+          e.preventDefault();
+
+          $.ajax({
+            success: function(result){
+              window.location.href = "http://localhost/PHP/pages/customer/Cart.php";
+            }
+          })
+        })
+      })
+    </script>
 </header>
+
+<?php
+  // session_destroy()
+?>

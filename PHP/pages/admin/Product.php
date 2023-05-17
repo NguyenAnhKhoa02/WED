@@ -170,7 +170,7 @@
         $product = new Product("","","","","","","","","","","","","","","");
     }
 
-    echo '<div class="row"">
+    echo '<div class="row">
 
                 <label class="form-label">Name</label>
                 <input type="text" class="form-label" id="nameProd" value='.$product->name.'>
@@ -317,147 +317,180 @@
         $("#AddNew").click(function(e){
             e.preventDefault();
             updateData();
+            try {
+                var name = $('#nameProd').val();
+                var price = $('#price').val();
+                var material = $('#material').val();
+                var gender = $('#gender').val();
+                var made_by = $("#made_by").val();
+                var status = $("#status").val();
+                colors=[];
+                sizes = [];
+                quantities = [];
+                images = [];
+                listProductDetail.forEach(element => {
+                    if(element.color != "" || element.quantity != ""){
+                        colors.push(element.color);
+                        sizes.push(element.size);
+                        quantities.push(element.quantity);
+                        images.push(element.image);
+                    }
+                });
 
-            var name = $('#nameProd').val();
-            var price = $('#price').val();
-            var material = $('#material').val();
-            var gender = $('#gender').val();
-            var made_by = $("#made_by").val();
-            var status = $("#status").val();
-            colors=[];
-            sizes = [];
-            quantities = [];
-            images = [];
-            listProductDetail.forEach(element => {
-                if(element.color != ""){
-                    colors.push(element.color);
-                    sizes.push(element.size);
-                    quantities.push(element.quantity);
-                    images.push(element.image);
+                var category = $('#category').val();
+                var type = $('#type').val();
+                var description = $('#description').val();
+                
+                if(name == "") throw "nameProd + Please enter the name of product!";
+                if(price == "") throw "price + Please enter the price of product";
+                if(material == "") throw "material + Please enter the material of product!";
+                if(made_by == "") throw "made_by + Please fill up made by!";
+                if(colors.length == 0) throw "color0 + Please enter the color of product";
+                if(quantities.length == 0) throw "quantity0 + Please enter the quantities of product";
+
+                for (let index = 0; index < colors.length; index++) {
+                    if(colors[index] == "") throw "color"+index+" + Please enter the color of product!";
+                    if(quantities[index] == "") throw "quantity"+index+" + Please enter the quantity of product!";
                 }
-            });
 
-            var category = $('#category').val();
-            var type = $('#type').val();
-            var description = $('#description').val();
+                var formData = new FormData();
+                formData.append('mode',"Product");
+                formData.append('nameProd',name);
+                formData.append('price',price);
+                formData.append('material',material);
+                formData.append('gender',gender);
+                formData.append('made_by',made_by);
+                formData.append('status',status);
+                formData.append('colors',colors);
+                formData.append('sizes',sizes);
+                formData.append('category',category);
+                formData.append('type',type);
+                formData.append('quantities',quantities);
 
-            if(name == ""){
-                alert("Name is null");
-            }else if(price == ""){
-                alert("Price is null");
-            }else if(material == ""){
-                alert("Material is null");
-            }else if(made_by == ""){
-                alert("Made by is null")
-            }
-
-            var formData = new FormData();
-            formData.append('nameProd',name);
-            formData.append('price',price);
-            formData.append('material',material);
-            formData.append('gender',gender);
-            formData.append('made_by',made_by);
-            formData.append('status',status);
-            formData.append('colors',colors);
-            formData.append('sizes',sizes);
-            formData.append('category',category);
-            formData.append('type',type);
-            formData.append('quantities',quantities);
-
-            $i = 0;
-            images.forEach(element => {
-                formData.append('image'+$i++,element); 
-            });
- 
-            if(images.length == 0){
-                images.push("");
-            }
-
-            formData.append('description',description);
-
-            $.ajax({
-                url: 'AddProductToDB.php',
-                type: 'post',
-                data: formData,
-                contentType:false,
-                processData:false,
-                success: function(dataResult){
-                    alert(dataResult);
-                    $("#content").load("ManageProduction.php");
+                $i = 0;
+                images.forEach(element => {
+                    formData.append('image'+$i++,element); 
+                });
+            
+                if(images.length == 0){
+                    images.push("");
                 }
-            })
+
+                formData.append('description',description);
+
+                $.ajax({
+                    url: 'Add.php',
+                    type: 'post',
+                    data: formData,
+                    contentType:false,
+                    processData:false,
+                    success: function(dataResult){
+                        if(dataResult.split("+")[0].trim() == "false"){
+                            $("#" + dataResult.split("+")[1].trim()).focus();
+                            alert(dataResult.split("+")[2]);
+                        }else{
+                            alert(dataResult);
+                            $('#content').load("ManageProduction.php");
+                        }
+                    }
+                })
+            } catch (error) {
+                idError = "#" + error.split("+")[0];
+                messageError = error.split("+")[1];
+
+                $(idError).focus();
+                alert(messageError);
+            }
         })
 
         $("#Update").click(function(e){
             e.preventDefault();
             updateData();
 
-            var id = $('#id').val();
-            var nameProd = $('#nameProd').val();
-            var price = $('#price').val();
-            var material = $('#material').val();
-            var gender = $('#gender').val();
-            var made_by = $("#made_by").val();
-            var status = $("#status").val();
-            var category = $('#category').val();
-            var type = $('#type').val();
-            var quantity_purchased = $('#quantity_purchased').val();
-            var description = $('#description').val();
+            try {
+                var id = $('#id').val();
+                var nameProd = $('#nameProd').val();
+                var price = $('#price').val();
+                var material = $('#material').val();
+                var gender = $('#gender').val();
+                var made_by = $("#made_by").val();
+                var status = $("#status").val();
+                var category = $('#category').val();
+                var type = $('#type').val();
+                var quantity_purchased = $('#quantity_purchased').val();
+                var description = $('#description').val();
+                colors=[];
+                sizes = [];
+                quantities = [];
+                images = [];
+                listProductDetail.forEach(element => {
+                    if(element.color != "" || element.quantity != ""){
+                        colors.push(element.color);
+                        sizes.push(element.size);
+                        quantities.push(element.quantity);
+                        images.push(element.image);
+                    }
+                });
 
-            colors=[];
-            sizes = [];
-            quantities = [];
-            images = [];
-            listProductDetail.forEach(element => {
-                if(element.color != ""){
-                    colors.push(element.color);
-                    sizes.push(element.size);
-                    quantities.push(element.quantity);
-                    images.push(element.image);
+
+                if(nameProd == "") throw "nameProd + Please enter the name of product!";
+                if(price == "") throw "price + Please enter the price of product";
+                if(material == "") throw "material + Please enter the material of product!";
+                if(made_by == "") throw "made_by + Please fill up made by!";
+                if(quantity_purchased == "") throw "quantity_purchased + Please enter quantity purchased!" 
+                if(colors.length == 0) throw "color0 + Please enter the color of product!";
+                if(quantities.length == 0) throw "quantity0 + Please enter the quantities of product!";
+                for (let index = 0; index < colors.length; index++) {
+                    if(colors[index] == "") throw "color"+index+" + Please enter the color of product!";
+                    if(quantities[index] == "") throw "quantity"+index+" + Please enter the quantity of product!";
                 }
-            });
+                
+                var formData = new FormData();
+                formData.append('mode',"Product");
+                formData.append('id',id);
+                formData.append('nameProd',nameProd);
+                formData.append('price',price);
+                formData.append('material',material);
+                formData.append('gender',gender);
+                formData.append('made_by',made_by);
+                formData.append('status',status);
+                formData.append('colors',colors);
+                formData.append('sizes',sizes);
+                formData.append('category',category);
+                formData.append('type',type);
+                formData.append('quantities',quantities);
+                formData.append('quantity_purchased',quantity_purchased);
 
-            var formData = new FormData();
-            formData.append('id',id);
-            formData.append('nameProd',nameProd);
-            formData.append('price',price);
-            formData.append('material',material);
-            formData.append('gender',gender);
-            formData.append('made_by',made_by);
-            formData.append('status',status);
-            formData.append('colors',colors);
-            formData.append('sizes',sizes);
-            formData.append('category',category);
-            formData.append('type',type);
-            formData.append('quantities',quantities);
-            formData.append('quantity_purchased',quantity_purchased);
-
-            
-            $i = 0;
-            images.forEach(element => {
-                formData.append('image'+$i++,element); 
-            });
-
-
-            formData.append('description',description);;
-
-            $.ajax({
-                url: "UpdateProductToDB.php",
-                type: 'post',
-                data: formData,
-                contentType:false,
-                processData:false,
-                success: function(dataResult){
-                    $.ajax({
-                        url:"Product.php",
-                        data:{id:idProd},
-                        type:'post',
-                        success: function(result){
-                            $("#content").html(result);
+                $i = 0;
+                 images.forEach(element => {
+                     formData.append('image'+$i++,element); 
+                 });
+             
+             
+                 formData.append('description',description);
+                $.ajax({
+                    url: "Update.php",
+                    type: 'post',
+                    data: formData,
+                    contentType:false,
+                    processData:false,
+                    success: function(dataResult){
+                        if(dataResult.split("+")[0].trim() == "false"){
+                            $("#" + dataResult.split("+")[1].trim()).focus();
+                            alert(dataResult.split("+")[2]);
+                        }else{
+                            alert(dataResult);
+                            $('#content').load("ManageProduction.php");
                         }
-                    })
-                }
-            })
+                    }
+                })
+            } catch (error) {
+                idError = "#" + error.split("+")[0];
+                messageError = error.split("+")[1];
+
+                $(idError).focus();
+                alert(messageError);
+            }
         })
     })
 </script>

@@ -25,11 +25,13 @@
             e.preventDefault();
             var name = $('#name').val();
             $.ajax({
-                url: 'AddTypeToDB.php',
+                url: 'Add.php',
                 type: 'post',
-                data: {name:name},
+                data: {name:name,
+                       mode:"Type"},
                 success: function(dataResult){
-                    console.log(dataResult);
+                    alert(dataResult);
+                    $('#content').load("ManageType.php");
                 }
             })
         })

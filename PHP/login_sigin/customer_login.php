@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,152 +7,113 @@
   <meta http-equiv="x-ua-compatible" content="IE=edge, chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="shortcut icon" href="mg/nezuko cut.jpg"  type="image/png">
+  <link rel="shortcut icon" href="mg/nezuko cut.jpg"  type="image/png">
   <title>Avenue Fashion</title>
   <link href="styles/bootstrap.min.css" rel="stylesheet">
   <link href="styles/backend.css" rel="stylesheet">
   <link href="styles/login_register.css" rel="stylesheet">
 
   <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<div class="box" ><!-- box Starts -->
+  <div class="box" ><!-- box Starts -->
 
-<div class="box-header" ><!-- box-header Starts -->
+  <div class="box-header" ><!-- box-header Starts -->
 
-  <!-- MAIN -->
-  <main>
-    <!-- HERO -->
-    <div class="nero">
-      <div class="nero__heading">
-        <span class="nero__bold">Checkout</span>
+    <!-- MAIN -->
+    <main>
+      <!-- HERO -->
+      <div class="nero">
+        <div class="nero__heading">
+          <span class="nero__bold">Checkout</span>
+        </div>
+        <p class="nero__text">
+        </p>
       </div>
-      <p class="nero__text">
-      </p>
-    </div>
-  </main>
+    </main>
 
 
-<center>
+    <center> 
 
 
-<h1>Login</h1>
+    <h1>Login</h1>
 
-<p class="lead" >Customer</p>
+    <p class="lead" >Customer</p>
 
 
-</center>
+    </center>
 
-<p class="text-muted" >
-
+    <p class="text-muted" >
         Chào mừng đến với bình nguyên vô tận :_
-</p>
+    </p>
 
+  </div><!-- box-header Ends -->
 
+    <div class="form-group" ><!-- form-group Starts -->
+      <label>UserName</label>
+      <input type="text" class="form-control" name="c_username" required id="c_username">
+    </div><!-- form-group Ends -->
+    <div class="form-group" ><!-- form-group Starts -->
+      <label>Password</label>
+      <input type="password" class="form-control" name="c_pass" required id="c_password">
+      <h4 align="center">
+        <a href="forgot_pass.php"> Forgot Password </a>
+      </h4>
+    </div><!-- form-group Ends -->
 
+    <div class="text-center" ><!-- text-center Starts -->
+      <form action="" method="post"></form>
+        <button name="login" value="Login" class="btn btn-primary" id="btn_login">
+          <i class="fa fa-sign-in" ></i> Log in
+        </button>
+      </form>
+    </div><!-- text-center Ends -->
 
-</div><!-- box-header Ends -->
+  <center><!-- center Starts -->
+    <a href="customer_register.php" >
 
-<form action="checkout.php" method="post" ><!--form Starts -->
+    <h3>New ? Register Here</h3>
 
-<div class="form-group" ><!-- form-group Starts -->
-
-<label>UserName</label>
-
-<input type="text" class="form-control" name="c_username" required >
-
-</div><!-- form-group Ends -->
-
-<div class="form-group" ><!-- form-group Starts -->
-
-<label>Password</label>
-
-<input type="password" class="form-control" name="c_pass" required >
-
-<h4 align="center">
-
-<a href="forgot_pass.php"> Forgot Password </a>
-
-</h4>
-
-</div><!-- form-group Ends -->
-
-<div class="text-center" ><!-- text-center Starts -->
-
-<button name="login" value="Login" class="btn btn-primary" >
-
-<i class="fa fa-sign-in" ></i> Log in
-
-
-</button>
-
-</div><!-- text-center Ends -->
-
-
-</form><!--form Ends -->
-
-<center><!-- center Starts -->
-
-<a href="customer_register.php" >
-
-<h3>New ? Register Here</h3>
-
-</a>
-
-
-</center><!-- center Ends -->
+    </a>
+  </center><!-- center Ends -->
 
 </div><!-- box Ends -->
 
-<?php
-/*
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
+</script>
 
-if(isset($_POST['login'])){
+<script>
+  $(document).ready(function(){
+    $("#btn_login").click(function(e){
+      try {
+        var username = $("#c_username").val();
+        var password = $("#c_password").val();
 
-$customer_email = $_POST['c_email'];
+        if(username == "") throw "c_username + Please enter your username!";
+        if(password == "") throw "c_password + Please enter your password!";
+        if(username.indexOf(" ") >= 0) throw "c_username + Username musn't have whitespace!";
+        if(password.indexOf(" ") >= 0) throw "c_password + Password musn't have whitespace!";
 
-$customer_pass = $_POST['c_pass'];
+        $.ajax({
+          url:"Login.php",
+          type:"post",
+          data: {username:username,
+                 password:password},
+          success: function(result){
+            console.log(result);
+            if(result.split("+")[0].trim() == "false"){
+              $("#" + result.split("+")[1].trim()).focus();
+              alert(result.split("+")[2]);
+            }else{
+              window.location.href = "http://localhost/PHP/index.php";
+            }
+          }
+        }) 
+      } catch (error) {
+        idError = "#" + error.split("+")[0];
+        messageError = error.split("+")[1];
 
-$select_customer = "select * from customers where customer_email='$customer_email' AND customer_pass='$customer_pass'";
-
-$run_customer = mysqli_query($con,$select_customer);
-
-$get_ip = getRealUserIp();
-
-$check_customer = mysqli_num_rows($run_customer);
-
-$select_cart = "select * from cart where ip_add='$get_ip'";
-
-$run_cart = mysqli_query($con,$select_cart);
-
-$check_cart = mysqli_num_rows($run_cart);
-
-if($check_customer==0){
-
-echo "<script>alert('password or email is wrong')</script>";
-
-exit();
-
-}
-
-if($check_customer==1 AND $check_cart==0){
-
-$_SESSION['customer_email']=$customer_email;
-
-echo "<script>alert('You are Logged In')</script>";
-
-echo "<script>window.open('customer/my_account.php?my_orders','_self')</script>";
-
-}
-else {
-
-$_SESSION['customer_email']=$customer_email;
-
-echo "<script>alert('You are Logged In')</script>";
-
-echo "<script>window.open('checkout.php','_self')</script>";
-
-} 
-
-
-}
-
-*/?>
+        $(idError).focus();
+        alert(messageError);
+      }
+    })
+  })
+</script>

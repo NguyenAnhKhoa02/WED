@@ -70,10 +70,11 @@
 
       if(confirm("Do you want to delete?")){
         $.ajax({
-          url:'DeleteProduct.php',
+          url:'Delete.php',
           type:'post',
-          data: {id:id},
+          data: {id:id,mode:"Product"},
           success:function(result){
+              alert(result);
               $("#content").load("ManageProduction.php");
           }
         }) 

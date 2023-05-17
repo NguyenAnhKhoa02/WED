@@ -17,17 +17,6 @@
 
   <script src="js/jquery.min.js"> </script>
   <script src="js/bootstrap.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment-with-locales.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet"/>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
-  <script src="https://rawgit.com/tempusdominus/bootstrap-4/master/build/js/tempusdominus-bootstrap-4.js"></script>
-  <link href="https://rawgit.com/tempusdominus/bootstrap-4/master/build/css/tempusdominus-bootstrap-4.css" rel="stylesheet"/>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/> -->
-
 
   <!-- MAIN -->
   <main>
@@ -59,7 +48,7 @@
 
         </div><!-- box-header Ends -->
 
-        <form method="post" enctype="multipart/form-data" ><!--form Starts-->
+      <!--form Starts-->
 
           <div class="form-group" ><!-- form-group Starts -->
 
@@ -183,14 +172,13 @@
           </div><!-- form-group Ends -->
 
           <div class="text-center"><!-- text-center Starts -->
+          <form method="post" enctype="multipart/form-data" >
               <button type="submit" class="btn btn-primary" id="register">
-              <i class="fa fa-user-md"></i> Register
+              <i class="fa fa-user-md">Register</i>
 
             </button>
-
+            </form>
           </div><!-- text-center Ends -->
-
-        </form><!--form Ends-->
         <center><!-- center Starts -->
 
           <a href="customer_login.php" >
@@ -221,7 +209,6 @@ include("includes/footer.php");
 <script>
 
   $(document).ready(function(){
-
     $('.tick1').hide();
     $('.cross1').hide();
 
@@ -278,58 +265,14 @@ include("includes/footer.php");
 </script>
 
 <script>
-
   $(document).ready(function(){
 
     $("#pass").keyup(function(){
       check_pass();
     });
 
-<<<<<<< Updated upstream
-check_pass();
-
-});
-$("#phone").keyup(function(){
-  check_phone()
-});
-$("#birthday").keyup(function(){
-  check_birthday()
-})
-});
-//check mail 
-// function check_email(){
-//   var val=document.getElementById("email").value
-//   var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/
-
-//       $('.email').focusout(function(){
-//         if (filter.test(val)){
-//           $('.tick3').show()
-//           $('.cross3').hide()
-//         } else{
-//           $('.tick3').hide()
-//           $('.cross3').show()
-//         }
-    
-//   })
-  
-// }
-
-function check_phone(){
-  var val = document.getElementById("phone").value
-  var filter =/((09|03|07|08|05)+([0-9]{8})\b)/g
-
-    $('.phone').focusout(function(){
-        if(filter.test(val)){
-          $('.tick4').show()
-          $('.cross4').hide()
-        } else{
-          $('.tick4').hide()
-          $('.cross4').show()
-        }
-=======
     $("#phone").keyup(function(){
       check_phone()
->>>>>>> Stashed changes
     })
   });
 
@@ -352,7 +295,7 @@ function check_phone(){
 
   function check_phone(){
     var val = document.getElementById("phone").value
-    var isPhone = /^0\d{10}$/
+    var isPhone = /^0\d{9}$/
 
     if(isPhone.test(val)){
         $('.tick4').show()
@@ -426,7 +369,7 @@ function check_phone(){
 
 <script>
   $(document).ready(function(){
-    $("#register").click(function(e) {
+    $("#register").click(function(e){
       e.preventDefault();
       try {
         var c_user = $('#c_user').val();
@@ -434,7 +377,7 @@ function check_phone(){
         var con_pass = $('#con_pass').val();
         var c_name = $('#c_name').val();
         var c_gender = $('#c_gender').val();
-        var c_birthday = $('#birthday').val();
+        var birthday = $('#birthday').val();
         var c_address = $('#c_address').val();
         var c_phone = $('#phone').val();
 
@@ -443,15 +386,43 @@ function check_phone(){
         if(con_pass == "") throw "con_pass + Please confirm your password!";
         if(c_name == "") throw "c_name + Please enter your name";
         if(c_gender == "Nothing") throw "c_gender + Please choose your gender!";
-        if(c_birthday == "") throw "birthday + Please choose your birthday!";
+        if(birthday == "") throw "birthday + Please choose your birthday!";
         if(c_address == "") throw "c_address + Pleas enter your address!";
         if(c_phone == "") throw "phone + Pleas enter your address!";
+        if(c_user.indexOf(" ") >= 0) throw "c_user + Username musn't have whitespace!"
         if(check_pass() == "Very weak") throw "pass + Your password is so weak!";
         if(check_pass() == "Weak") throw "pass + Your password is weak!";
         if(c_pass != con_pass) throw "con_pass + Your confirm password is wrong!";
+        if(check_phone() == false) throw "phone + Your phone is wrong!";
 
-        alert("Register successful! Let's sign in to web");
-        $('body').load('customer_login.php');        
+        var dataForm = new FormData();
+        dataForm.append('c_user',c_user);
+        dataForm.append('c_pass',c_pass);
+        dataForm.append('con_pass',con_pass);
+        dataForm.append('c_name',c_name);
+        dataForm.append('c_gender',c_gender);
+        dataForm.append('birthday',birthday);
+        dataForm.append('c_address',c_address);
+        dataForm.append('c_phone',c_phone);
+
+        $.ajax({
+          url:"SaveToDB.php",
+          type: "post",
+          data:dataForm,
+          contentType:false,
+          processData:false,
+          success: function(result){
+            console.log(result);
+            if(result.split("+")[0].trim() == "false"){
+              $("#" + result.split("+")[1].trim()).focus();
+              alert(result.split("+")[2]);
+            }else{
+              alert("Register successful!")
+              $('body').load("customer_login.php");
+            }
+          }
+        });
+
       } catch (error) {
         idError = "#" + error.split("+")[0];
         messageError = error.split("+")[1];
@@ -459,7 +430,9 @@ function check_phone(){
         $(idError).focus();
         alert(messageError);
       }
+
     })
+
   })
 </script>
 

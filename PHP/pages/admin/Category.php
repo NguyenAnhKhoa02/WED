@@ -23,16 +23,33 @@
     $(document).ready(function(){
         $("#AddNew").click(function(e){
             e.preventDefault();
-            var name = $('#name').val();
-            $.ajax({
-                url: 'AddCategoryToDB.php',
-                type: 'post',
-                data: {name:name},
-                success: function(dataResult){
-                    console.log(dataResult);
-                    // print_r(dataResult);
-                }
-            })
+            try {
+                var name = $('#name').val();
+                if(name == "") throw "name + Please enter the name!";
+
+                $.ajax({
+                    url: 'Add.php',
+                    type: 'post',
+                    data: {name:name,
+                           mode:"Category"},
+                    success: function(dataResult){
+                        // if(dataResult.split("+")[0].trim() == "false"){
+                        //     $("#" + dataResult.split("+")[1].trim()).focus();
+                        //     alert(dataResult.split("+")[2]);
+                        // }else{
+                        //     alert(dataResult);
+                        //     $('#content').load("ManageCategory.php");
+                        // }
+                        console.log(dataResult);
+                    }
+                })
+            } catch (error) {
+                idError = "#" + error.split("+")[0];
+                messageError = error.split("+")[1];
+
+                $(idError).focus();
+                alert(messageError);
+            }
         })
     })
 </script>
