@@ -181,6 +181,49 @@
 
             $this->CloseCon();
         }
+        function StartIndex($page){
+            return ($page - 1) * 6;
+        }
+
+        function DividePage(){
+            $numberProd = count($this->listProduct);
+            $numberPage = $numberProd%6;
+            return $retVal = ($numberPage == 0) ? $numberProd / 6 : $numberProd / 6 + 1;
+        }
+
+        function GetAllProdByGender($gender){
+            $this->OpenCon();
+
+            $string_query = "SELECT * 
+                             FROM product
+                             INNER JOIN product_detail on product_detail.id_product = product.id_product
+                             INNER JOIN category on category.id_category = product.id_category
+                             INNER JOIN type_product on type_product.id_type_product = product.id_type_product
+                             WHERE product.gender = '$gender'";
+            $this->ExcQuery($string_query);
+
+            $this->listProduct = [];
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                    $this->listProduct[] = new Product($row["id_product"],
+                                                       $row["nameProd"],
+                                                       $row["price"],
+                                                       $row["description"],
+                                                       $row["material"],
+                                                       $row["gender"],
+                                                       $row["made_by"],
+                                                       $row["status"],
+                                                       $row["nameCate"],
+                                                       $row["nameType"],
+                                                       $row["color"],
+                                                       $row["size"],
+                                                       $row["quantity"],
+                                                       $row["image"],
+                                                       $row["quantity_purchased"]);
+                }
+            }
+
+            $this->CloseCon();
+        }
     }
-    
 ?>

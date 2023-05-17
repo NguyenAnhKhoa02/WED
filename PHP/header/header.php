@@ -7,7 +7,7 @@
             <a class="navbar-brand" href="#">Logo</a>
             <div class="collapse navbar-collapse justify-content-center" id="optionsNav">
               <div class="navbar-nav">
-                <a class="nav-link active" href="#">Men</a>
+                <a class="nav-link active" href="http://localhost/WED/PHP/pages/products/men.php">Men</a>
                 <a class="nav-link active" href="#">Women</a>  
                 <a class="nav-link active" href="#">Sport</a> 
               </div>
@@ -40,7 +40,7 @@
                         <form>";
                 }
                 else {
-                  echo "<form action=\"login_sigin/customer_login.php\">
+                  echo "<form action=\"http://localhost/WED/PHP/login_sigin/customer_login.php?\">
                           <button class=\"btn btn-outline-success btnInNav\">Sign in</button>
                         </form>";
                 }
@@ -98,6 +98,9 @@
             }
           })
         })
+
+
+
       })
     </script>
 </header>
