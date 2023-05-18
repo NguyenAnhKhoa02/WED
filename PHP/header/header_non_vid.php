@@ -14,8 +14,8 @@
             </div>
 
             <form class="input-group" action="" style="width: 300px;">
-              <button class="btn btn-outline-success">Icon</button>
-              <input class="form-control" placeholder="search">
+              <button class="btn btn-outline-success" id="search" >Search</button>
+              <input class="form-control" placeholder="search" id="value_search"  >
             </form>
 
             <?php
@@ -98,8 +98,6 @@
             }
           })
         })
-
-
 
       })
     </script>

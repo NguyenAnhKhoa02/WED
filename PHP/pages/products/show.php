@@ -3,9 +3,9 @@
 
     $request = $_POST["request"];
     
-    require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/connect_database.php");
-    require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/product/product.php");
-    require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/product/list_product.php");
+    require_once($_SERVER["DOCUMENT_ROOT"]."/WED/PHP/classes/connect_database.php");
+    require_once($_SERVER["DOCUMENT_ROOT"]."/WED/PHP/classes/product/product.php");
+    require_once($_SERVER["DOCUMENT_ROOT"]."/WED/PHP/classes/product/list_product.php");
     $listProduct = new ListProduct();
 
     if($request == "all"){

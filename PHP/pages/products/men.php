@@ -20,7 +20,7 @@
 
   <header>
     <?php
-        include_once($_SERVER["DOCUMENT_ROOT"]."/PHP/header/header_non_vid.php");
+        include_once($_SERVER["DOCUMENT_ROOT"]."/WED/PHP/header/header_non_vid.php");
     ?>
   </header>
 
@@ -40,7 +40,7 @@
             <div class="col-md-8" id="content"></div>
         </div>
     </div>
-
+  <div class="col-md-8" id ="content2"></div>
 
 
   <!-- Bootstrap JavaScript Libraries -->
@@ -57,6 +57,15 @@
   </script>
 
   <script>
+    // $(document).ready(function(){
+    //     $.ajax({
+    //         url:'show.php',
+    //         type: "post",
+    //         data:{request:"Male"},
+    //         success: function(result){
+    //             $("#content").html(result);
+    //         }
+    //     })
     $(document).ready(function(){
         $.ajax({
             url:'show.php',
@@ -66,11 +75,22 @@
                 $("#content").html(result);
             }
         })
-
-
-
+        $("#search").click(function(e){
+              
+             
+              $.ajax({
+                url:'search.php',
+                type: "post",
+                data: {search: $("#value_search").val()}, 
+                success: function(result){
+                    $("#content").html(result);
+     }
+  })
+ })
     })
+
   </script>
+  
 </body>
 
 </html>

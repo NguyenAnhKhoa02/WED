@@ -282,5 +282,37 @@
 
             return $quantity;
         }
-    }
+        function searchProduct($search){
+            $this->OpenCon();
+            $string_query = "SELECT * FROM `product` 
+            INNER JOIN category on category.id_category = product.id_category
+            INNER JOIN type_product on type_product.id_type_product = product.id_type_product
+            WHERE nameProd LIKE '%$search%'";
+            $this->ExcQuery($string_query);
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                     $this->listProduct[] = Product::Product($row["id_product"],
+                                                 $row["nameProd"],
+                                                 $row["price"],
+                                                 "",
+                                                 $row["material"],
+                                                 $row["gender"],
+                                                 $row["made_by"],
+                                                 $row["status"],
+                                                 $row["nameCate"],
+                                                 $row["nameType"],
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "");
+                }
+            }
+
+            $this->CloseCon();
+        }
+}
+            
+    
+    
 ?>
