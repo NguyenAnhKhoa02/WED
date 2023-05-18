@@ -17,7 +17,7 @@
             $this->ExcQuery($string_query);
             if($this->result->num_rows){
                 while ($row = $this->result->fetch_assoc()) {
-                    $this->listProduct[] = new Product($row["id_product"],
+                    $this->listProduct[] = Product::Product($row["id_product"],
                                                  $row["nameProd"],
                                                  $row["price"],
                                                  $row["description"],
@@ -49,7 +49,7 @@
             $this->ExcQuery($string_query);
             if($this->result->num_rows){
                 while ($row = $this->result->fetch_assoc()) {
-                    $this->listProduct[] = new Product($row["id_product"],
+                    $this->listProduct[] = Product::Product($row["id_product"],
                                                  $row["nameProd"],
                                                  $row["price"],
                                                  "",
@@ -110,7 +110,7 @@
             $this->ExcQuery($string_query);
             if($this->result->num_rows){
                 while ($row = $this->result->fetch_assoc()) {
-                    $this->listProduct[] = new Product($row["id_product"],
+                    $this->listProduct[] = Product::Product($row["id_product"],
                                                        $row["nameProd"],
                                                        $row["price"],
                                                        $row["description"],
@@ -186,9 +186,7 @@
         }
 
         function DividePage(){
-            $numberProd = count($this->listProduct);
-            $numberPage = $numberProd%6;
-            return $retVal = ($numberPage == 0) ? $numberProd / 6 : $numberProd / 6 + 1;
+            return ceil(count($this->listProduct)/6);
         }
 
         function GetAllProdByGender($gender){
@@ -196,7 +194,6 @@
 
             $string_query = "SELECT * 
                              FROM product
-                             INNER JOIN product_detail on product_detail.id_product = product.id_product
                              INNER JOIN category on category.id_category = product.id_category
                              INNER JOIN type_product on type_product.id_type_product = product.id_type_product
                              WHERE product.gender = '$gender'";
@@ -205,25 +202,85 @@
             $this->listProduct = [];
             if($this->result->num_rows){
                 while ($row = $this->result->fetch_assoc()) {
-                    $this->listProduct[] = new Product($row["id_product"],
-                                                       $row["nameProd"],
-                                                       $row["price"],
-                                                       $row["description"],
-                                                       $row["material"],
-                                                       $row["gender"],
-                                                       $row["made_by"],
-                                                       $row["status"],
-                                                       $row["nameCate"],
-                                                       $row["nameType"],
-                                                       $row["color"],
-                                                       $row["size"],
-                                                       $row["quantity"],
-                                                       $row["image"],
-                                                       $row["quantity_purchased"]);
+                    $this->listProduct[] = Product::Product($row["id_product"],
+                                                 $row["nameProd"],
+                                                 $row["price"],
+                                                 "",
+                                                 $row["material"],
+                                                 $row["gender"],
+                                                 $row["made_by"],
+                                                 $row["status"],
+                                                 $row["nameCate"],
+                                                 $row["nameType"],
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "");
                 }
             }
 
             $this->CloseCon();
+        }
+
+        function getAllSizeFromColor($id,$color){
+            $this->OpenCon();
+
+            $string_query = "SELECT product_detail.size
+                             FROM product_detail
+                             WHERE product_detail.id_product = '$id' and product_detail.color='$color' and product_detail.quantity > 0";
+            $listSize = [];
+            $this->ExcQuery($string_query);
+
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                    $listSize[] = $row["size"];
+                }
+            }
+
+            $this->CloseCon();
+
+            return $listSize;
+        }
+
+        function getImage($id,$color){
+            $this->OpenCon();
+
+            $string_query = "SELECT product_detail.image 
+                             FROM `product_detail` 
+                             WHERE product_detail.id_product='$id' 
+                             and product_detail.color='$color'";
+            
+            $this->ExcQuery($string_query);
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                    $image = $row["image"];
+                }
+            }
+
+            $this->CloseCon();
+
+            return $image;
+        }
+
+        function getQuantity($id,$color,$size){
+            $this->OpenCon();
+
+            $string_query = "SELECT product_detail.quantity 
+                             FROM `product_detail` 
+                             WHERE product_detail.id_product='$id' 
+                             and product_detail.color='$color' and product_detail.size='$size'";
+            
+            $this->ExcQuery($string_query);
+            if($this->result->num_rows){
+                while ($row = $this->result->fetch_assoc()) {
+                    $quantity = $row["quantity"];
+                }
+            }
+
+            $this->CloseCon();
+
+            return $quantity;
         }
     }
 ?>

@@ -16,23 +16,6 @@
         </tr>
       </thead>
       <tbody>
-        <?php
-        //   require($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/connect_database.php');
-        //   $connectDB = new connectDatabase();
-        //   $connectDB->OpenCon();
-
-        //   $string_query = "select *
-        //                    from type_product";
-
-        //   $connectDB->ExcQuery($string_query);
-        
-        //   while ($row = $connectDB->result->fetch_assoc()) {
-        //     echo '<tr>
-        //           <th scope="row">'.$row["id_type_product"].'
-        //           <td>'.$row["nameType"].'</td>
-        //           </tr>';
-        //   }
-        ?>
       </tbody>
 </table>
 

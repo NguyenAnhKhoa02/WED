@@ -330,12 +330,23 @@
                 images = [];
                 listProductDetail.forEach(element => {
                     if(element.color != "" || element.quantity != ""){
-                        colors.push(element.color);
-                        sizes.push(element.size);
-                        quantities.push(element.quantity);
-                        images.push(element.image);
+                        for (let index = 0; index <= colors.length; index++) {
+                            if(index == colors.length){
+                                colors.push(element.color);
+                                sizes.push(element.size);
+                                quantities.push(element.quantity);
+                                images.push(element.image);
+                                break;
+                            }
+
+                            if(colors[index] == element.color && sizes[index] == element.size){
+                                quantities[index] =  (Number(quantities[index]) + Number(element.quantity)).toString();
+                                break;
+                            }
+                        }
                     }
                 });
+
 
                 var category = $('#category').val();
                 var type = $('#type').val();
@@ -425,10 +436,20 @@
                 images = [];
                 listProductDetail.forEach(element => {
                     if(element.color != "" || element.quantity != ""){
-                        colors.push(element.color);
-                        sizes.push(element.size);
-                        quantities.push(element.quantity);
-                        images.push(element.image);
+                        for (let index = 0; index <= colors.length; index++) {
+                            if(index == colors.length){
+                                colors.push(element.color);
+                                sizes.push(element.size);
+                                quantities.push(element.quantity);
+                                images.push(element.image);
+                                break;
+                            }
+
+                            if(colors[index] == element.color && sizes[index] == element.size){
+                                quantities[index] =  (Number(quantities[index]) + Number(element.quantity)).toString();
+                                break;
+                            }
+                        }
                     }
                 });
 

@@ -25,16 +25,43 @@
 </head>
 
 <body>
-<form action="http://localhost/PHP/index.php" method="post">
+<form action="/PHP/pages/customer/Cart.php" method="post">
     <input name="" id="" class="btn btn-outline-primary" type="submit" value="Home">
 </form>
 
     <div class="container">
+        
+        <div class="row" style="text-align:center;">
+            <h4>
+                Invoice
+            </h4>
+        </div>
 
         <div class="row">
-            <h4>
-                <?php echo $customer->name?>'s cart
-            </h4>
+            <h6>
+                <?php
+                    echo "Id:    " . uniqid("invc",false) . "<br>";
+                    echo "Date:  " . date("d-m-Y") . "<br>";
+
+                    $date=date_create(date("d-m-Y"));
+                    date_add($date,date_interval_create_from_date_string("7 days"));
+                    echo "Receiving date (prediction):  " . date_format($date,"d-m-Y") . "<br>";
+
+                    echo '
+                        <form action="" method="post">
+                            <label class="form-label">Address</label>
+                            <input class="form-control" type="text" name="" id="" value="'.$customer->address.'">
+                        </form>
+                    ';
+
+                    echo '
+                        <form action="" method="post">
+                            <label class="form-label">Phone</label>
+                            <input class="form-control" type="text" name="" id="" value="'.$customer->phone.'">
+                        </form>
+                    ';
+                ?>
+            </h6>
         </div>
 
         <table class="table table-hover">
@@ -53,10 +80,11 @@
             <?php
               try {
                 if(!isset($_SESSION["carts"])) throw new Exception("");
-
+                $total = 0;
                 foreach ($_SESSION["carts"] as $key => $value) {
                   $field = json_decode($value);
                   $subTotal = $field->price * $field->quantity;
+                  $total += $subTotal;
                   echo "
                     <tr>
                     <td>$field->name</td>
@@ -67,6 +95,16 @@
                     </tr>
                   ";
                 }
+
+                echo "
+                    <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style=\"font-weight: bold\">Total</td>
+                    <td>$total</td>
+                    </tr>
+                ";
               } catch (Exception $th) {
                 //throw $th;
               }
@@ -77,7 +115,7 @@
 
         <div class="row" style="text-align:center">
           <form action="" method="post">
-            <input type="button" value="Order" class="btn btn-outline-primary" id="btnOrder">
+            <input type="button" value="Accept" class="btn btn-outline-primary" id="btnAccept">
           </form>
         </div>
     </div>
@@ -96,11 +134,9 @@
 
   <script>
     $(document).ready(function(){
-      $("#btnOrder").click(function(){
+      $("#btnAccept").click(function(){
         try {
-          var products = <?php echo $retVal = (isset($_SESSION["carts"])) ? json_encode($_SESSION["carts"]) : "'None'"?>;
-          if(products == "None") throw "Empty!";
-          window.location.href = "/PHP/pages/customer/Invoice.php";
+            alert('vao');
         } catch (error) {
           alert(error);
         }

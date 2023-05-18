@@ -4,12 +4,12 @@
           <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#optionsNav" aria-controls="optionsNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
          </button>
-            <a class="navbar-brand" href="#">Logo</a>
+            <a class="navbar-brand" href="http://localhost/PHP/index.php">Logo</a>
             <div class="collapse navbar-collapse justify-content-center" id="optionsNav">
               <div class="navbar-nav">
-                <a class="nav-link active" href="http://localhost/WED/PHP/pages/products/men.php">Men</a>
-                <a class="nav-link active" href="#">Women</a>  
-                <a class="nav-link active" href="#">Sport</a> 
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/men.php">Men</a>
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/women.php">Women</a>  
+                <a class="nav-link active" href="/PHP/pages/products/all.php">All</a> 
               </div>
             </div>
 
@@ -63,7 +63,7 @@
         $("#btnSignOut").click(function(e){
           e.preventDefault();
           $.ajax({
-            url:"login_sigin/Logout.php",
+            url:"/PHP/login_sigin/Logout.php",
             type:"post",
             success: function(result){
               window.location.href = "http://localhost/PHP/index.php";

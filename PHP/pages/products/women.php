@@ -61,7 +61,7 @@
         $.ajax({
             url:'show.php',
             type: "post",
-            data:{request:"Male"},
+            data:{request:"Female"},
             success: function(result){
                 $("#content").html(result);
             }

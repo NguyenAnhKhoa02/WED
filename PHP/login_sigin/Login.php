@@ -23,5 +23,6 @@
     session_start();
     $_SESSION["idCustomer"] = $listCustomer->id_customer;
     $_SESSION["idGroupRole"] = $listAccount->id_group_roles;
+    $_SESSION["carts"] = array();
     $_SESSION["idAccount"] = $listAccount->id_account;
 ?>
