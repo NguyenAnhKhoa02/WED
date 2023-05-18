@@ -13,7 +13,6 @@
           <th scope="col">Made_by</th>
           <th scope="col">Status</th>
           <th scope="col">Category</th>
-          <th scope="col">Type</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +34,6 @@
                   <td>'.$value->made_by.'</td>
                   <td>'.$value->status.'</td>
                   <td>'.$value->category.'</td>
-                  <td>'.$value->type_product.'</td>
                   <td><button class="btn btn-warning buttonEdit">Edit</button></td>
                   <td><button class="btn btn-danger buttonDelete" data-target="#modelConfirm" data-toggle="modal">Delete</button></td>
                   </tr>';
@@ -74,7 +72,6 @@
           type:'post',
           data: {id:id,mode:"Product"},
           success:function(result){
-              alert(result);
               $("#content").load("ManageProduction.php");
           }
         }) 

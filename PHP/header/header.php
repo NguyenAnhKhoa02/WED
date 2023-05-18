@@ -4,19 +4,20 @@
           <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#optionsNav" aria-controls="optionsNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
          </button>
-            <a class="navbar-brand" href="#">Logo</a>
+            <a class="navbar-brand" href="http://localhost/PHP/index.php">Logo</a>
             <div class="collapse navbar-collapse justify-content-center" id="optionsNav">
               <div class="navbar-nav">
-                <a class="nav-link active" href="http://localhost/WED/PHP/pages/products/men.php">Men</a>
-                <a class="nav-link active" href="#">Women</a>  
-                <a class="nav-link active" href="#">Sport</a> 
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/men.php">Men</a>
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/women.php">Women</a>  
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/all.php">All</a> 
               </div>
             </div>
-<!-- 
+
             <form class="input-group" action="" method="post" style="width: 300px;">
-              <button class="btn btn-outline-success" type="submit" id="search"n ame ="search">Search</button>
-              <input class="form-control" placeholder="search" name ="content"> -->
-</form>
+              <button class="btn btn-outline-success" type="submit" id="search" name ="search">Search</button>
+              <input type="text" class="form-control" placeholder="search" name ="content" id="valueSearch">
+            </form>
+
             <?php
                 if(isset($_SESSION["idCustomer"])){
                   if(substr($_SESSION["idCustomer"],0,4) == "cust"){
@@ -42,6 +43,12 @@
                   echo "<form action=\"http://localhost/WED/PHP/login_sigin/customer_login.php?\">
                           <button class=\"btn btn-outline-success btnInNav\">Sign in</button>
                         </form>";
+                }
+
+                if(isset($_POST["valueSearch"])){
+                  session_start();
+                  $_SESSION["search"] = $_POST["valueSearch"]; 
+                  echo "<script>window.location.href='http://localhost/PHP/pages/products/search.php'</script>";
                 }
             ?>
           </div>
@@ -96,24 +103,19 @@
             }
           })
         })
-  
-        $("#search").click(function(e){ 
-        e.preventDefault();
-        $.ajax({
-          url:'product/all.php',
-          type: 'post',
-          success:function(result){
-              $("").html(result);
-          }
+
+        $("#search").click(function(e){
+          e.preventDefault();
+          var valueSearch=$("#valueSearch").val();
+          $.ajax({
+            url:'/PHP/header/header.php',
+            type:'post',
+            data:{valueSearch:valueSearch},
+            success: function(result){
+              $('#header').html(result);
+            }
+          })
         })
-
-
-       }) 
-})
-  </script>
+      })
     </script>
 </header>
-
-<?php
-  // session_destroy()
-?>

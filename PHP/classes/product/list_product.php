@@ -11,7 +11,6 @@
                              from product
                              inner join product_detail on product.id_product = product_detail.id_product
                              inner join category on product.id_category = category.id_category
-                             inner join type_product on product.id_type_product = type_product.id_type_product
                              order by product.id_product asc";
 
             $this->ExcQuery($string_query);
@@ -26,7 +25,6 @@
                                                  $row["made_by"],
                                                  $row["status"],
                                                  $row["nameCate"],
-                                                 $row["nameType"],
                                                  $row["color"],
                                                  $row["size"],
                                                  $row["quantity"],
@@ -41,10 +39,10 @@
         function getAllFromProductTable(){
 
             $this->OpenCon();
-            $string_query = "SELECT product.id_product, product.nameProd, product.price,product.material,product.gender,product.gender,product.made_by,product.status,category.nameCate,type_product.nameType
+            $string_query = "SELECT product.id_product, product.nameProd, product.price,product.material,product.gender,product.made_by,product.status,category.nameCate
                              FROM product
                              INNER JOIN category on category.id_category = product.id_category
-                             INNER JOIN type_product on type_product.id_type_product = product.id_type_product";
+                             ORDER BY product.timeLabel DESC";
 
             $this->ExcQuery($string_query);
             if($this->result->num_rows){
@@ -58,7 +56,7 @@
                                                  $row["made_by"],
                                                  $row["status"],
                                                  $row["nameCate"],
-                                                 $row["nameType"],
+                                                 "",
                                                  "",
                                                  "",
                                                  "",
@@ -71,11 +69,15 @@
 
         }
 
-        function addNewProduct($name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,$images){
+        function addNewProduct($name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$quantity,$description,$images){
             $id_product = uniqid("prod",false);
             
             $this->OpenCon();
-            $string_query = "INSERT INTO `product`(`id_product`,`nameProd` ,`price`, `description`, `material`, `gender`, `made_by`, `status`, `id_category`, `id_type_product`) VALUES ('$id_product','$name',$price,'$description','$material','$gender','$made_by','$status','$category','$type')";
+            date_default_timezone_set("Asia/Bangkok");
+            $labelTime = intval(date("d")) + intval(date("m")) + intval(date("Y")) + intval(date("s")) + intval(date("i")) + intval(date("H"));
+            $labelTime = strval($labelTime);
+
+            $string_query = "INSERT INTO `product`(`id_product`,`nameProd` ,`price`, `description`, `material`, `gender`, `made_by`, `status`, `id_category`,`timeLabel`) VALUES ('$id_product','$name',$price,'$description','$material','$gender','$made_by','$status','$category','$labelTime')";
             $this->ExcQueryInsert($string_query);
 
             $arrColors = explode(",",$color);
@@ -91,9 +93,6 @@
                 $this->ExcQueryInsert($string_query);
             }
 
-            // $string_query = 'INSERT INTO product_detail(id_product, color, size, quantity, url_image, quantity_purchased) VALUES ('.$id_product.',\''.$color.'\',\''.$size.'\','.$quantity.',\''.$image.'\',0)';
-            // $this->ExcQueryInsert($string_query);
-
             $this->CloseCon();
         }
 
@@ -104,7 +103,6 @@
                              from product
                              inner join product_detail on product.id_product = product_detail.id_product
                              inner join category on product.id_category = category.id_category
-                             inner join type_product on product.id_type_product = type_product.id_type_product
                              where product.id_product = '$id'";
             
             $this->ExcQuery($string_query);
@@ -119,7 +117,6 @@
                                                        $row["made_by"],
                                                        $row["status"],
                                                        $row["nameCate"],
-                                                       $row["nameType"],
                                                        $row["color"],
                                                        $row["size"],
                                                        $row["quantity"],
@@ -133,7 +130,7 @@
             return $this->listProduct;
         }
 
-        function UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$type,$quantity,$description,array $images,$quantity_purchased){
+        function UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$color,$size,$category,$quantity,$description,array $images,$quantity_purchased){
             $this->OpenCon();
 
             $string_query = 'UPDATE product SET 
@@ -144,8 +141,7 @@
                             gender=\''.$gender.'\',
                             made_by=\''.$made_by.'\',
                             status=\''.$status.'\',
-                            id_category=\''.$category.'\',
-                            id_type_product=\''.$type.'\' 
+                            id_category=\''.$category.'\'
                             WHERE id_product = \''.$id.'\'';
 
             $this->ExcQueryInsert($string_query);
@@ -195,8 +191,8 @@
             $string_query = "SELECT * 
                              FROM product
                              INNER JOIN category on category.id_category = product.id_category
-                             INNER JOIN type_product on type_product.id_type_product = product.id_type_product
-                             WHERE product.gender = '$gender'";
+                             WHERE product.gender = '$gender'
+                             ORDER BY product.timeLabel DESC";
             $this->ExcQuery($string_query);
 
             $this->listProduct = [];
@@ -211,7 +207,6 @@
                                                  $row["made_by"],
                                                  $row["status"],
                                                  $row["nameCate"],
-                                                 $row["nameType"],
                                                  "",
                                                  "",
                                                  "",
@@ -282,6 +277,36 @@
 
             return $quantity;
         }
+
+        function UpdateQuantity($listProdctInTrans){
+            $this->OpenCon();
+
+
+            foreach ($listProdctInTrans as $key => $value) {
+                $string_query = "SELECT product_detail.quantity
+                                 FROM `product_detail` 
+                                 WHERE product_detail.id_product='$value->id' 
+                                 and product_detail.color='$value->color'
+                                 and product_detail.size='$value->size'";
+                $this->ExcQuery($string_query);
+
+                if ($this->result->num_rows) {
+                    while ($row = $this->result->fetch_assoc()) {
+                        $quantityInStock = $row["quantity"];      
+                    }
+                }
+                $quantityUpdate = $quantityInStock - intval($value->quantity);
+
+                $string_query = "UPDATE `product_detail` 
+                                 SET `quantity`='$quantityUpdate',`quantity_purchased`='$value->quantity' 
+                                 WHERE `product_detail`.`id_product`='$value->id' and `product_detail`.`color`='$value->color' and `product_detail`.`size`='$value->size'";
+                $this->ExcQueryInsert($string_query);
+                echo $string_query;
+            }
+             
+            $this->CloseCon();
+        }
+
         function searchProduct($search){
             $this->OpenCon();
             $string_query = "SELECT * FROM `product` 
@@ -289,6 +314,7 @@
             INNER JOIN type_product on type_product.id_type_product = product.id_type_product
             WHERE nameProd LIKE '%$search%'";
             $this->ExcQuery($string_query);
+            $this->listProduct = [];
             if($this->result->num_rows){
                 while ($row = $this->result->fetch_assoc()) {
                      $this->listProduct[] = Product::Product($row["id_product"],
@@ -311,8 +337,48 @@
 
             $this->CloseCon();
         }
-}
+
+
+        function FilterProduct($gender,$listFilterCategory,$listFilterMadeBy){
+            $this->OpenCon();
+
+            $stringWhere = "WHERE ";
+
+            if($listFilterCategory != "") $stringWhere.="category.nameCate IN ($listFilterCategory) and ";
+            if($listFilterMadeBy != "") $stringWhere.="product.made_by IN ($listFilterMadeBy) and ";
+            if($gender != "all") $stringWhere.="product.gender = '$gender'";
+            else $stringWhere.="product.gender IN('male','female')";
+
+            $string_query = "SELECT *
+                            FROM product
+                            INNER JOIN category on category.id_category = product.id_category
+                            $stringWhere"."ORDER BY product.timeLabel DESC";
+
+            $listProduct = [];
             
-    
-    
+            $this->ExcQuery($string_query);
+
+            if($this->result->num_rows){
+                while($row = $this->result->fetch_assoc()){
+                    $this->listProduct[] = Product::Product($row["id_product"],
+                                                            $row["nameProd"],
+                                                            $row["price"],
+                                                            "",
+                                                            $row["material"],
+                                                            $row["gender"],
+                                                            $row["made_by"],
+                                                            $row["status"],
+                                                            $row["nameCate"],
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "",
+                                                            "");
+                }
+            }
+
+            $this->CloseCon();
+        }
+    }
 ?>

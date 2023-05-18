@@ -33,14 +33,13 @@
                     data: {name:name,
                            mode:"Category"},
                     success: function(dataResult){
-                        // if(dataResult.split("+")[0].trim() == "false"){
-                        //     $("#" + dataResult.split("+")[1].trim()).focus();
-                        //     alert(dataResult.split("+")[2]);
-                        // }else{
-                        //     alert(dataResult);
-                        //     $('#content').load("ManageCategory.php");
-                        // }
-                        console.log(dataResult);
+                        if(dataResult.split("+")[0].trim() == "false"){
+                            $("#" + dataResult.split("+")[1].trim()).focus();
+                            alert(dataResult.split("+")[2]);
+                        }else{
+                            alert(dataResult);
+                            $('#content').load("ManageCategory.php");
+                        }
                     }
                 })
             } catch (error) {

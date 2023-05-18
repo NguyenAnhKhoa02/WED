@@ -7,10 +7,6 @@
     $listCustomer = new ListCustomer();
 
     $customer = $listCustomer->GetDataFromId($_SESSION["idCustomer"]);
-    
-    if(isset($_POST["id"])){
-      array_splice($_SESSION["carts"],$_POST["id"],1);
-    }
 ?>
 
 <!doctype html>
@@ -29,19 +25,51 @@
 </head>
 
 <body>
-<form action="http://localhost/PHP/index.php" method="post">
+<form action="/PHP/pages/customer/Cart.php" method="post">
     <input name="" id="" class="btn btn-outline-primary" type="submit" value="Home">
 </form>
 
     <div class="container">
-
-        <div class="row">
+        
+        <div class="row" style="text-align:center;">
             <h4>
-                <?php echo $customer->name?>'s cart
+                Invoice
             </h4>
         </div>
 
-        <table class="table table-hover" id="CartTable">
+        <div class="row">
+            <h6>
+                <?php
+                    $idInvioce = uniqid("invc",false);
+                    $idOrder = uniqid('ordr',false);
+                    $dateCreate = date("d-m-Y");
+                    echo "IdInvoice:    " . $idInvioce . "<br>";
+                    echo "IdOrder:      " . $idOrder . "<br>";
+                    echo "Date:         " . $dateCreate. "<br>";
+
+                    $date=date_create(date("d-m-Y"));
+                    date_add($date,date_interval_create_from_date_string("7 days"));
+                    $dateRecieve = date_format($date,"d-m-Y");
+                    echo "Receiving date (prediction):  " . $dateRecieve . "<br>";
+
+                    echo '
+                        <form action="" method="post">
+                            <label class="form-label">Address</label>
+                            <input class="form-control" type="text" name="" id="address" value="'.$customer->address.'">
+                        </form>
+                    ';
+
+                    echo '
+                        <form action="" method="post">
+                            <label class="form-label">Phone</label>
+                            <input class="form-control" type="text" name="" id="phone" value="'.$customer->phone.'">
+                        </form>
+                    ';
+                ?>
+            </h6>
+        </div>
+
+        <table class="table table-hover">
           <thead>
             <tr>
               <th scope="col">NameProd</th>
@@ -57,10 +85,11 @@
             <?php
               try {
                 if(!isset($_SESSION["carts"])) throw new Exception("");
-
+                $total = 0;
                 foreach ($_SESSION["carts"] as $key => $value) {
                   $field = json_decode($value);
                   $subTotal = $field->price * $field->quantity;
+                  $total += $subTotal;
                   echo "
                     <tr>
                     <td>$field->name</td>
@@ -68,10 +97,19 @@
                     <td>$field->size</td>
                     <td>$field->quantity</td>
                     <td>$subTotal</td>
-                    <td><button class=\"btn btn-danger buttonDelete\" data-target=\"#modelConfirm\" data-toggle=\"modal\">Delete</button></td>
                     </tr>
                   ";
                 }
+
+                echo "
+                    <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td style=\"font-weight: bold\">Total</td>
+                    <td>$total</td>
+                    </tr>
+                ";
               } catch (Exception $th) {
                 //throw $th;
               }
@@ -79,14 +117,8 @@
 
           </tbody>
         </table>
-
-        <div class="row" style="text-align:center">
-          <form action="" method="post">
-            <input type="button" value="Order" class="btn btn-outline-primary" id="btnOrder">
-          </form>
-        </div>
     </div>
-
+    </script>
   <!-- Bootstrap JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
     integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -94,41 +126,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
     integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
-  </script>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js">
-  </script>
-
-  <script>
-    $(document).ready(function(){
-
-      $("#btnOrder").click(function(){
-        try {
-          var products = <?php echo $retVal = (isset($_SESSION["carts"])) ? json_encode($_SESSION["carts"]) : "'None'"?>;
-          if(products == "None") throw "Empty!";
-          if(products.length == 0) throw "Empty!";
-          window.location.href = "/PHP/pages/customer/Invoice.php";
-        } catch (error) {
-          alert(error);
-        }
-
-      })
-
-      $('td').click(function(){
-
-        var row_index = $(this).parent().index('tr') - 1;
-        if(confirm("Do you want to delete?")){
-          $.ajax({
-          url:'Cart.php',
-          data:{id:row_index},
-          type:'post',
-          success: function(result){
-            $('body').html(result);
-          }
-        })
-        }
-      }) 
-    })
   </script>
 </body>
 

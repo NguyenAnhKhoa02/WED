@@ -33,5 +33,11 @@
         $listAccount->RemoveAccount($id_account);
     }
 
-    echo 'delete success';
+    if($mode == "Category"){
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/category/category.php");
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/category/list_category.php");
+        $listCategory = new ListCategory();
+
+        $listCategory->deleteCategory($_POST["id"]);
+    }
 ?>

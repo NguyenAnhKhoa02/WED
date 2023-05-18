@@ -22,17 +22,30 @@
     }
 
     function updateData(){
-        listProductDetail = [];
+        listTempt = [];
         for (let index = 0; index < arrHtml.length; index++) {
             color = document.getElementById("color"+index).value;
             size = document.getElementById("size"+index).value;
             quantity = document.getElementById("quantity"+index).value;
-            image = document.getElementById("image"+index).files[0];
 
-            // console.log(image);
+            if(listProductDetail.length > 0 && index < listProductDetail.length){
+                checkImage = listProductDetail[index].image;
+                console.log(checkImage);
+                if(checkImage == undefined){
+                    image = document.getElementById("image"+index).files[0];
+                }else{
+                    image = checkImage;
+                }
+            }
+            else 
+                image = document.getElementById("image"+index).files[0];
 
-            listProductDetail.push(new productDetail(color,size,quantity,image));
+            listTempt.push(new productDetail(color,size,quantity,image));
+            console.log(listTempt);
         }
+
+        listProductDetail = [];
+        listProductDetail = listTempt;
     }
 
     arrHtml = [];
@@ -91,11 +104,14 @@
             else
                 html += "<td><input id=\"quantity"+index+"\" type=\"number\"></td>";
 
-            if(index < length)
-                if(listProductDetail[index].image == "" || listProductDetail[index].image == "undefined")
+            if(index < length){
+                checkImage = listProductDetail[index].image;
+                if(checkImage == undefined)
                     html += "<td>NULL</td>";
-                else
-                    html += "<td>"+listProductDetail[index].image+"</td>";
+                else{
+                    html += "<td>"+listProductDetail[index].image.name+"</td>";
+                }
+            }
             else
                 html += "<td>NULL</td>";
             html += "<td><input type=\"file\" class=\"form-control\" id=\"image"+index+"\"></input></td>";
@@ -138,11 +154,6 @@
     require_once($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/category/list_category.php');
     $listCategory = new ListCategory();
     $listCategory->getAll();
-
-    require_once($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/type/type.php');
-    require_once($_SERVER['DOCUMENT_ROOT'].'/PHP/classes/type/list_type.php');
-    $listType = new ListType();
-    $listType->getAll();
     
     $product;
     $value;
@@ -151,7 +162,7 @@
 
     if($id != ""){
         $listProd = $list->getProductWithID($id);
-        $product = new Product($listProd[0]->id,
+        $product = Product::Product($listProd[0]->id,
                                $listProd[0]->name,
                                $listProd[0]->price,
                                $listProd[0]->description,
@@ -160,7 +171,6 @@
                                $listProd[0]->made_by,
                                $listProd[0]->status,
                                $listProd[0]->category,
-                               $listProd[0]->type_product,
                                $listProd[0]->color,
                                $listProd[0]->size,
                                $listProd[0]->quantity,
@@ -169,6 +179,8 @@
     } else{
         $product = new Product("","","","","","","","","","","","","","","");
     }
+
+    // echo $product->name;
 
     echo '<div class="row">
 
@@ -229,16 +241,7 @@
     echo         '</select>
             </div>';
 
-    echo '  <div class="col-md-3">
-                <label class="form-label">Type</label>
-                <select id="type">';
-
-    foreach ($listType->listType as $value) {
-        echo '<option>'.$value->name.'</option>';
-    }
-
-    echo         '</select>
-            </div>';
+    echo         '</div>';
 
     echo '</div>';
 
@@ -375,7 +378,6 @@
                 formData.append('colors',colors);
                 formData.append('sizes',sizes);
                 formData.append('category',category);
-                formData.append('type',type);
                 formData.append('quantities',quantities);
 
                 $i = 0;

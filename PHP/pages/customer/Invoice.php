@@ -40,24 +40,29 @@
         <div class="row">
             <h6>
                 <?php
-                    echo "Id:    " . uniqid("invc",false) . "<br>";
-                    echo "Date:  " . date("d-m-Y") . "<br>";
+                    $idInvioce = uniqid("invc",false);
+                    $idOrder = uniqid('ordr',false);
+                    $dateCreate = date("d-m-Y");
+                    echo "IdInvoice:    " . $idInvioce . "<br>";
+                    echo "IdOrder:      " . $idOrder . "<br>";
+                    echo "Date:         " . $dateCreate. "<br>";
 
                     $date=date_create(date("d-m-Y"));
                     date_add($date,date_interval_create_from_date_string("7 days"));
-                    echo "Receiving date (prediction):  " . date_format($date,"d-m-Y") . "<br>";
+                    $dateRecieve = date_format($date,"d-m-Y");
+                    echo "Receiving date (prediction):  " . $dateRecieve . "<br>";
 
                     echo '
                         <form action="" method="post">
                             <label class="form-label">Address</label>
-                            <input class="form-control" type="text" name="" id="" value="'.$customer->address.'">
+                            <input class="form-control" type="text" name="" id="address" value="'.$customer->address.'">
                         </form>
                     ';
 
                     echo '
                         <form action="" method="post">
                             <label class="form-label">Phone</label>
-                            <input class="form-control" type="text" name="" id="" value="'.$customer->phone.'">
+                            <input class="form-control" type="text" name="" id="phone" value="'.$customer->phone.'">
                         </form>
                     ';
                 ?>
@@ -120,6 +125,19 @@
         </div>
     </div>
 
+
+    <script>
+      function check_phone(){
+        var val = document.getElementById("phone").value
+        var isPhone = /^0\d{9}$/
+
+        if(isPhone.test(val)){
+            return true
+        }else{
+          return false
+        }
+      }
+    </script>
   <!-- Bootstrap JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
     integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
@@ -136,9 +154,44 @@
     $(document).ready(function(){
       $("#btnAccept").click(function(){
         try {
-            alert('vao');
+          var idInvoice = "<?php echo $idInvioce?>";
+          var idOrder = "<?php echo $idOrder?>";
+          var dateCreate = "<?php echo $dateCreate?>";
+          var dateReceive = "<?php echo $dateRecieve?>";
+          var sumPrice = <?php echo $total?>;
+          var address = $("#address").val();
+          var phone = $("#phone").val();
+
+          if(address == "") throw "address + Please enter your address!";
+          if(phone == "") throw "phone + Please enter your phone!";
+          if(!check_phone()) throw "phone + Your phone is incorrect!";
+          $.ajax({
+            url:'Save.php',
+            data:{idInvoice:idInvoice,
+                  idOrder:idOrder,
+                  dateCreate:dateCreate,
+                  dateReceive:dateReceive,
+                  total:sumPrice,
+                  address:address,
+                  phone:phone},
+            type:'post',
+            success: function(result){
+              if(result.split("+")[0].trim() == "false"){
+                $("#" + result.split("+")[1].trim()).focus();
+                alert(result.split("+")[2]);
+              }else{
+                alert(result);
+                window.location.href = "/PHP/index.php";
+              }
+            }
+          })
+
         } catch (error) {
-          alert(error);
+          idError = "#" + error.split("+")[0];
+          messageError = error.split("+")[1];
+
+          $(idError).focus();
+          alert(messageError);
         }
 
       })

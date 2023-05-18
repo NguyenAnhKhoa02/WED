@@ -7,15 +7,15 @@
             <a class="navbar-brand" href="http://localhost/PHP/index.php">Logo</a>
             <div class="collapse navbar-collapse justify-content-center" id="optionsNav">
               <div class="navbar-nav">
-                <a class="nav-link active" href="/PHP/pages/products/men.php">Men</a>
-                <a class="nav-link active" href="/PHP/pages/products/women.php">Women</a>  
-                <a class="nav-link active" href="/PHP/pages/products/all.php">All</a> 
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/men.php">Men</a>
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/women.php">Women</a>  
+                <a class="nav-link active" href="http://localhost/PHP/pages/products/all.php">All</a> 
               </div>
             </div>
 
-            <form class="input-group" action="" style="width: 300px;">
-              <button class="btn btn-outline-success" id="search" >Search</button>
-              <input class="form-control" placeholder="search" id="value_search"  >
+            <form class="input-group" action="" method="post" style="width: 300px;">
+              <button class="btn btn-outline-success" type="submit" id="search" name ="search">Search</button>
+              <input type="text" class="form-control" placeholder="search" name ="content" id="valueSearch">
             </form>
 
             <?php
@@ -44,11 +44,18 @@
                           <button class=\"btn btn-outline-success btnInNav\">Sign in</button>
                         </form>";
                 }
+
+                if(isset($_POST["valueSearch"])){
+                  session_start();
+                  print_r("13");
+                  $_SESSION["search"] = $_POST["valueSearch"]; 
+                  echo "<script>window.location.href='http://localhost/PHP/pages/products/search.php'</script>";
+                }
             ?>
           </div>
     </nav>
-
-    <!-- <div class="embed-responsive embed-responsive-21by9">
+<!-- 
+    <div class="embed-responsive embed-responsive-21by9">
       <video autoplay width="100%" loop muted>
         <source src="vid\intro.mp4">
       </video>
@@ -63,7 +70,7 @@
         $("#btnSignOut").click(function(e){
           e.preventDefault();
           $.ajax({
-            url:"/PHP/login_sigin/Logout.php",
+            url:"login_sigin/Logout.php",
             type:"post",
             success: function(result){
               window.location.href = "http://localhost/PHP/index.php";
@@ -91,7 +98,6 @@
 
         $("#btnCart").click(function(e){
           e.preventDefault();
-
           $.ajax({
             success: function(result){
               window.location.href = "http://localhost/PHP/pages/customer/Cart.php";
@@ -99,10 +105,19 @@
           })
         })
 
+        $("#search").click(function(e){
+          e.preventDefault();
+          var valueSearch=$("#valueSearch").val();
+          $.ajax({
+            url:'/PHP/header/header_non_vid.php',
+            type:'post',
+            data:{valueSearch:valueSearch},
+            success: function(result){
+              // console.log(result);
+              $('#header').html(result);
+            }
+          })
+        })
       })
     </script>
 </header>
-
-<?php
-  // session_destroy()
-?>

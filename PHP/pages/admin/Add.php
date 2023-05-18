@@ -11,10 +11,6 @@
         require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/category/list_category.php");
         $listCategory = new ListCategory();
 
-        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/type/type.php");
-        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/type/list_type.php");
-        $listType = new ListType();
-
         $nameProd = $_POST["nameProd"];
         $price = $_POST["price"];
         $material = $_POST["material"];
@@ -24,12 +20,10 @@
         $colors = $_POST["colors"];
         $sizes = $_POST["sizes"];
         $category = $_POST["category"];
-        $type = $_POST["type"];
         $quantities = $_POST["quantities"];
         $description = $_POST["description"];
 
         $category = $listCategory->getIdFromName($category);
-        $type = $listType->getIdFromName($type);
 
         $images = array();
         for ($i=0; $i < sizeof(explode(",",$colors)); $i++) { 
@@ -59,7 +53,7 @@
             if($arrCheckQuantities[$i] == "") die("false + quantity$i + Please enter the quantity of product!");
         }
     
-        $list->addNewProduct($nameProd,$price,$material,$gender,$made_by,$status,$colors,$sizes,$category,$type,$quantities,$description,$images);
+        $list->addNewProduct($nameProd,$price,$material,$gender,$made_by,$status,$colors,$sizes,$category,$quantities,$description,$images);
     }
 
     if($mode == "Category"){

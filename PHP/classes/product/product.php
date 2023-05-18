@@ -9,7 +9,6 @@
         public $made_by;
         public $status;
         public $category;
-        public $type_product;
         public $color;
         public $size;
         public $quantity;
@@ -18,7 +17,7 @@
 
         function __construct(){}
 
-        public static function Product($id,$name,$price,$description,$material,$gender,$made_by,$status,$category,$type_product,$color,$size,$quantity,$image,$quantity_purchased){
+        public static function Product($id,$name,$price,$description,$material,$gender,$made_by,$status,$category,$color,$size,$quantity,$image,$quantity_purchased){
             $instance = new self();
             $instance->id = $id;
             $instance->price = $price;
@@ -29,7 +28,6 @@
             $instance->made_by = $made_by;
             $instance->status = $status;
             $instance->category = $category;
-            $instance->type_product = $type_product;
             $instance->color = $color;
             $instance->size = $size;
             $instance->quantity = $quantity;

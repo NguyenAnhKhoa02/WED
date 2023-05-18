@@ -71,6 +71,7 @@
               }
             }
           }
+          echo "<script>alert(\"Product just been add to cart!\");</script>";
         }
       } catch (Exception $th) {
         echo "<script>alert('Not enough quantity in stock!')</script>";
@@ -149,11 +150,6 @@
       </div>
 
       <h2>Price: <?php echo $product->price?></h2>
-
-      <div class="row" style="padding-top:50%;">
-        <div class="col" style="text-align: center;">
-          <button style="width: 100px; height:50px" class="btn btn-outline-primary">Order</button>
-        </div>
 
         <div class="col" style="text-align: center;">
           <button style="width: 100px; height:50px" class="btn btn-outline-primary" id="AddCart">AddCart</button>

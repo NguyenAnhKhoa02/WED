@@ -20,31 +20,17 @@
     require 'classes/connect_database.php';
   ?>
 
-  <?php
+  <div id="header">
+    <?php
       include "header/header.php";
-      // $var = explode("?",$actual_link);
-      // foreach ($var as $key => $value) {
-      //   $check = $check_key->check_key($value);
+    ?>
+  </div>
 
-      //   if($check == "cust") include "header/header.php";
-      // }
-      // if($check_key->check_key("id")){
-      //   include "header/header_non_vid.php";
-      // }else{
-      //   include "header/header.php";
-      // };
-  ?>
-
-  <?php
+  <div id="content">
+    <?php
       include "content.php";
-    // if($check_key->check_key("id")){
-    //   include "pages/products.php";
-    // }else{
-    // }
-  ?>
-
-
-
+    ?>
+  </div>
  
   <!-- <footer>
 

@@ -52,5 +52,14 @@
 
             $this->CloseCon();
         }
+
+        function deleteCategory($id){
+            $this->OpenCon();
+
+            $string_query = "DELETE FROM `category` WHERE category.id_category='$id'";
+            $this->ExcQueryInsert($string_query);
+
+            $this->CloseCon();
+        }
     }
 ?>

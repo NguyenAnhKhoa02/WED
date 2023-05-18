@@ -11,10 +11,6 @@
         require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/category/list_category.php");
         $listCategory = new ListCategory();
 
-        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/type/type.php");
-        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/type/list_type.php");
-        $listType = new ListType();
-
         $id = $_POST["id"];
         $name = $_POST["nameProd"];
         $price = $_POST["price"];
@@ -25,13 +21,11 @@
         $colors = $_POST["colors"];
         $size = $_POST["sizes"];
         $category = $_POST["category"];
-        $type = $_POST["type"];
         $quantities = $_POST["quantities"];
         $description = $_POST["description"];
         $quantity_purchased = $_POST["quantity_purchased"];
 
         $category = $listCategory->getIdFromName($category);
-        $type = $listType->getIdFromName($type);
 
         if($name == "") die("false + nameProd + Please enter the name of product!");
         if($price == "") die("false + price + Please enter the price of product!");
@@ -62,7 +56,7 @@
             }
         }
 
-        $list->UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$colors,$size,$category,$type,$quantities,$description,$images,$quantity_purchased);
+        $list->UpdateProduct($id,$name,$price,$material,$gender,$made_by,$status,$colors,$size,$category,$quantities,$description,$images,$quantity_purchased);
     }
 
     if($mode == "GroupRole"){
@@ -131,5 +125,32 @@
 
         $listCustomer->UpdateCustomer($id,$name,$address,$phone);
     }
+
+    if($mode == "Order"){
+        $status = $_POST["status"];
+        $idInvoice = $_POST["idInvoice"];
+        $idCustomer = $_POST["idCustomer"];
+        $idOrder = $_POST["idOrder"];
+        
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/connect_database.php");
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/product/product.php");
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/product/list_product.php");
+        $listProduct = new ListProduct();
+
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/invoice/invoice.php");
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/invoice/list_invoice.php");
+        $listInvoice = new ListInvoice();
+        $listInvoice->UpdateStatus($idInvoice,$status);
+
+        $listInvoice->getProductsInTrans($idInvoice);
+        $listProduct->UpdateQuantity($listInvoice->listProductInCart);  
+
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/order/order.php");
+        require_once($_SERVER["DOCUMENT_ROOT"]."/PHP/classes/order/list_order.php");
+        $listOrder = new ListOrder();
+
+        $listOrder->UpdateStatus($idOrder,$status);
+    }
+
     echo 'Update success';
 ?>

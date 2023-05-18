@@ -44,9 +44,9 @@
                   if($value == "ManageCategory"){
                     echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageCategory\">ManageCategory</button>";
                   }
-                  if($value == "ManageType"){
-                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageType\">ManageType</button>";
-                  }
+                  // if($value == "ManageType"){
+                  //   echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageType\">ManageType</button>";
+                  // }
                   if($value == "ManageInvoice"){
                     echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageInvoice\">ManageInvoice</button>";
                   }
@@ -56,9 +56,9 @@
                   if($value == "ManageEmployee"){
                     echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageEmployee\">ManageEmployee</button>";
                   }
-                  if($value == "ManageAccount"){
-                    echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageAccount\">ManageAccount</button>";
-                  }
+                  // if($value == "ManageAccount"){
+                  //   echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageAccount\">ManageAccount</button>";
+                  // }
                   if($value == "ManageGroupRole"){
                     echo "<button class=\"list-group-item list-group-item-action\" id=\"ManageGroupRole\">ManageGroupRole</button>";
                   }

@@ -2,10 +2,10 @@
     <h5>Manage Category</h5>
 </div>
 
-<table class="table table-hover">
+<table class="table table-hover" id="displayTable">
     <thead>
         <tr>
-          <th scope="col">#</th>
+          <th scope="col">ID</th>
           <th scope="col">Name</th>
         </tr>
       </thead>
@@ -20,8 +20,9 @@
 
           foreach ($list->listCategory as $value) {
             echo '<tr>
-                  <th scope="row">'.$value->id.'
+                  <td>'.$value->id.' </td>
                   <td>'.$value->name.'</td>
+                  <td><button class="btn btn-danger buttonDelete" data-target="#modelConfirm" data-toggle="modal">Delete</button></td>
                   </tr>';
           }
         ?>
@@ -45,5 +46,22 @@
         }
       })
     })
+
+    $("#displayTable").on('click',".buttonDelete",function(){
+      var currentRow = $(this).closest("tr");
+      var id=currentRow.find("td:eq(0)").text(); 
+
+      if(confirm("Do you want to delete?")){
+        $.ajax({
+          url:'Delete.php',
+          type:'post',
+          data: {id:id,mode:"Category"},
+          success:function(result){
+              $("#content").load("ManageCategory.php");
+          }
+        }) 
+      }
+    })
+
   })
 </script>
